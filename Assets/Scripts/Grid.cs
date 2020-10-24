@@ -22,7 +22,7 @@ public class Grid : MonoBehaviour
     {
         if (grid_square.GetComponent<GridSquare>() != null)
             CreateGrid();
-            SetGridNumbers(1);      
+            SetGridNumbers(0);      
     }
 
     // Update is called once per frame
