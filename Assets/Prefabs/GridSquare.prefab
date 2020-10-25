@@ -30,7 +30,7 @@ RectTransform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 5649242674999698341}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -67,11 +67,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 35
+    m_FontSize: 55
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 3
-    m_MaxSize: 40
+    m_MaxSize: 55
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -108,8 +108,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8498890578277927418}
   - {fileID: 5698792421139345329}
+  - {fileID: 8498890578277927418}
   - {fileID: 9136377298579746768}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -193,6 +193,7 @@ MonoBehaviour:
   red3: {fileID: 21300000, guid: c2991e7868bb9fd4e9bfb6d6e79772b1, type: 3}
   red4: {fileID: 21300000, guid: edc50310910ac8d46aaf10c131703cd0, type: 3}
   red5: {fileID: 21300000, guid: 7f0a19c6a2aa5fd438e79c9dd3607a1d, type: 3}
+  defaultSquare: {fileID: 21300000, guid: 659213b31fb041445a02faa8c6364367, type: 3}
 --- !u!1 &6336007702042461120
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +223,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5649242674999698341}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

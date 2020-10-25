@@ -86,6 +86,11 @@ public class Grid : MonoBehaviour
         for (int index = 0; index < grid_squares_.Count; index++)
         {
             grid_squares_[index].GetComponent<GridSquare>().SetNumber(data.unsolved_data[index]);
+            grid_squares_[index].GetComponent<GridSquare>().SetCorrectNumber(data.solved_data[index]);
+       
+            // prevents player from changing outside clue squares and already correct squares
+            grid_squares_[index].GetComponent<GridSquare>().SetDefaultValue((index % 11 == 0) || (index < 11) || (data.unsolved_data[index] != 0 && data.unsolved_data[index] == data.solved_data[index]));
+            
         }
     }
 }

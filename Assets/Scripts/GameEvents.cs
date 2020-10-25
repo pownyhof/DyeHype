@@ -23,4 +23,32 @@ public class GameEvents : MonoBehaviour
         if (OnSquareSelected != null)
             OnSquareSelected(square_index);
     }
+
+    public delegate void WrongColor();
+    public static event WrongColor OnWrongColor;
+
+    public static void OnWrongColorMethod()
+    {
+        if (OnWrongColor != null)
+            OnWrongColor();
+    }
+
+    public delegate void GameOver();
+    public static event GameOver OnGameOver;
+
+    public static void OnGameOverMethod()
+    {
+        if (OnGameOver != null)
+            OnGameOver();
+    }
+
+    public delegate void clearSquare();
+    public static event clearSquare OnClearSquare;
+
+    public static void OnClearSquareMethod()
+    {
+        if (OnClearSquare != null)
+            OnClearSquare();
+    }
+     
 }

@@ -10,9 +10,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public GameObject number_text;
     public GameObject grid_sprite;
     private int number_ = 0;
+    private int correctColor = 0;
     private bool selected_ = false;
     private int square_index_ = -1;
-
+    private bool SquareDefaultValue = false;
+    
 
     // #1F456E
     public Sprite blue;
@@ -44,6 +46,18 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public Sprite red4;
     public Sprite red5;
 
+    public Sprite defaultSquare;
+
+    public void SetDefaultValue(bool defaultValue)
+    {
+        SquareDefaultValue = defaultValue;
+    }
+
+    public bool GetDefaultValue()
+    {
+        return SquareDefaultValue;
+    }
+
     public bool IsSelected()
     {
         return selected_;
@@ -52,6 +66,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public void SetSquareIndex(int index)
     {
         square_index_ = index;
+    }
+
+    public void SetCorrectNumber(int number)
+    {
+        correctColor = number;
     }
 
 
@@ -108,6 +127,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     {
         number_ = number;
         DisplayText();
+
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -126,19 +146,54 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     {
         GameEvents.OnUpdateSquareColor += OnSetNumber;
         GameEvents.OnSquareSelected += OnSquareSelected;
+        GameEvents.OnClearSquare += OnClearSquare;
     }
 
     private void OnDisable()
     {
         GameEvents.OnUpdateSquareColor -= OnSetNumber;
         GameEvents.OnSquareSelected -= OnSquareSelected;
+        GameEvents.OnClearSquare -= OnClearSquare;
+    }
+
+    public void OnClearSquare()
+    {
+        SpriteRenderer rend = grid_sprite.GetComponent<SpriteRenderer>();
+
+        if (selected_ && !SquareDefaultValue)
+        {
+            number_ = 0;
+            rend.sprite = defaultSquare;
+            DisplayText();
+        }
     }
 
     public void OnSetNumber(int number)
     {
-        if (selected_)
+        if (selected_ && SquareDefaultValue == false)
         {
             SetNumber(number);
+
+            if (number_ != correctColor)
+            {
+
+                // changes Color to red if player enters wrong value
+                var colors = this.colors;
+                colors.normalColor = Color.red;
+                this.colors = colors;
+
+                GameEvents.OnWrongColorMethod();
+            }
+            else
+            {
+                // prevents player from changing already correct entered Squares or Squares already existing in starting Grid 
+                SquareDefaultValue = true;
+
+                // changes color back to white if value is correct
+                var colors = this.colors;
+                colors.normalColor = Color.white;
+                this.colors = colors;
+            }
         }
     }
 
