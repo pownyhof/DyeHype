@@ -20,16 +20,23 @@ public class Grid : MonoBehaviour
 
     void Start()
     {
+
+        int selectedLevel = PlayerPrefs.GetInt("selectedLevel");
         if (grid_square.GetComponent<GridSquare>() != null)
             CreateGrid();
-            SetGridNumbers(0);      
+            SetGridNumbers(selectedLevel);      
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        GameEvents.OnCheckGameCompleted += CheckGameCompleted;
     }
+
+    private void OnDisable()
+    {
+        GameEvents.OnCheckGameCompleted -= CheckGameCompleted;
+    }
+
 
     private void CreateGrid()
     {
@@ -92,5 +99,19 @@ public class Grid : MonoBehaviour
             grid_squares_[index].GetComponent<GridSquare>().SetDefaultValue((index % 11 == 0) || (index < 11) || (data.unsolved_data[index] != 0 && data.unsolved_data[index] == data.solved_data[index]));
             
         }
+    }
+
+    private void CheckGameCompleted()
+    {
+        foreach(var square in grid_squares_)
+        {
+            var comp = square.GetComponent<GridSquare>();
+            if(comp.IsCorrectSquareSet() == false)
+            {
+                return;
+            }
+        }
+
+        GameEvents.OnGameCompletedMethod();
     }
 }

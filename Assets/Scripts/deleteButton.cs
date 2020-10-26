@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class deleteButton : Selectable, IPointerClickHandler
+public class DeleteButton : Selectable, IPointerClickHandler
 {
-    
+
     public void OnPointerClick(PointerEventData eventData)
     {
         GameEvents.OnClearSquareMethod();

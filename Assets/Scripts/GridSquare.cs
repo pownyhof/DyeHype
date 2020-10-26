@@ -73,16 +73,15 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         correctColor = number;
     }
 
+    public bool IsCorrectSquareSet()
+    {
+        return number_ == correctColor;
+    }
+
 
     void Start()
     {
         selected_ = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void DisplayText()
@@ -194,6 +193,8 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 colors.normalColor = Color.white;
                 this.colors = colors;
             }
+
+            GameEvents.CheckGameCompletedMethod();
         }
     }
 

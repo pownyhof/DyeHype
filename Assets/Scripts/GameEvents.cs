@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class GameEvents : MonoBehaviour
 {
+    public delegate void CheckGameCompleted();
+    public static event CheckGameCompleted OnCheckGameCompleted;
+
+    public static void CheckGameCompletedMethod()
+    {
+        if (OnCheckGameCompleted != null)
+            OnCheckGameCompleted();
+    }
+
     public delegate void UpdateSquareColor(int number);
     public static event UpdateSquareColor OnUpdateSquareColor;
 
@@ -49,6 +58,15 @@ public class GameEvents : MonoBehaviour
     {
         if (OnClearSquare != null)
             OnClearSquare();
+    }
+
+    public delegate void GameCompleted();
+    public static event GameCompleted OnGameCompleted;
+
+    public static void OnGameCompletedMethod()
+    {
+        if (OnGameCompleted != null)
+            OnGameCompleted();
     }
      
 }
