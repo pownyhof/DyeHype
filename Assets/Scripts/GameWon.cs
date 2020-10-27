@@ -20,8 +20,10 @@ public class GameWon : MonoBehaviour
 
     private void OnGameCompleted()
     {
-        WinPopup.SetActive(true);
+        int levelReached = PlayerPrefs.GetInt("levelReached") + 1;
+        PlayerPrefs.SetInt("levelReached", levelReached);
         timeText.text = Timer.instance.GetTimeText().text;
+        WinPopup.SetActive(true);
     }
 
     private void OnEnable()

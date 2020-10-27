@@ -15,13 +15,13 @@ public class Grid : MonoBehaviour
     public Vector2 start_position = new Vector2(0.0f, 0.0f);
     public float square_scale = 1.0f;
     private List<GameObject> grid_squares_ = new List<GameObject>();
+    int selectedLevel;
 
-              
 
     void Start()
     {
 
-        int selectedLevel = PlayerPrefs.GetInt("selectedLevel");
+        selectedLevel = PlayerPrefs.GetInt("selectedLevel");
         if (grid_square.GetComponent<GridSquare>() != null)
             CreateGrid();
             SetGridNumbers(selectedLevel);      
