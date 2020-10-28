@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Diagnostics;
 
 public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPointerUpHandler, IPointerExitHandler
 {
 
     public GameObject number_text;
     public GameObject grid_sprite;
+    public AudioSource sound;
     private int number_ = 0;
     private int correctColor = 0;
     private bool selected_ = false;
@@ -188,6 +190,13 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 // prevents player from changing already correct entered Squares or Squares already existing in starting Grid 
                 SquareDefaultValue = true;
 
+                // if player didnt mute audio, enter square sound gets played
+                int audioMuted = PlayerPrefs.GetInt("audioMuted");
+                if (audioMuted == 0)
+                {
+                    sound.Play();
+                }
+                
                 // changes color back to white if value is correct
                 var colors = this.colors;
                 colors.normalColor = Color.white;

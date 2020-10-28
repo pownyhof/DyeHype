@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Security.Principal;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Grid : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class Grid : MonoBehaviour
     public GameObject grid_square;
     public Vector2 start_position = new Vector2(0.0f, 0.0f);
     public float square_scale = 1.0f;
+    public Button audioButton;
+    public Sprite audioOn;
+    public Sprite audioOff;
     private List<GameObject> grid_squares_ = new List<GameObject>();
     int selectedLevel;
 
@@ -42,7 +46,9 @@ public class Grid : MonoBehaviour
     {
         SpawnGridSquares();
         SetSquaresPosition();
+        setAudioButton();
     }
+
 
     private void SpawnGridSquares()
     {
@@ -54,6 +60,7 @@ public class Grid : MonoBehaviour
                 grid_squares_.Add(Instantiate(grid_square) as GameObject);
                 grid_squares_[grid_squares_.Count - 1].GetComponent<GridSquare>().SetSquareIndex(square_index);
                 grid_squares_[grid_squares_.Count - 1].transform.parent = this.transform; // instantiate this game object as a child of the object holding this script.
+                // grid_squares_[grid_squares_.Count - 1].transform.SetParent(this.transform, false);
                 grid_squares_[grid_squares_.Count - 1].transform.localScale = new Vector3(square_scale, square_scale, square_scale);
 
                 square_index++;
@@ -92,6 +99,7 @@ public class Grid : MonoBehaviour
 
         for (int index = 0; index < grid_squares_.Count; index++)
         {
+
             grid_squares_[index].GetComponent<GridSquare>().SetNumber(data.unsolved_data[index]);
             grid_squares_[index].GetComponent<GridSquare>().SetCorrectNumber(data.solved_data[index]);
        
@@ -101,17 +109,32 @@ public class Grid : MonoBehaviour
         }
     }
 
+    private void setAudioButton()
+    {
+        int audioMuted = PlayerPrefs.GetInt("audioMuted", 0);
+        if (audioMuted == 0)
+        {        
+            audioButton.GetComponent<Image>().sprite = audioOn;
+        }
+        else
+        {         
+            audioButton.GetComponent<Image>().sprite = audioOff;
+        }
+    }
+
     private void CheckGameCompleted()
     {
+        // gets called every time player enters a square
         foreach(var square in grid_squares_)
         {
             var comp = square.GetComponent<GridSquare>();
+            // if one square is still wrong player has to continue game
             if(comp.IsCorrectSquareSet() == false)
             {
                 return;
             }
         }
-
+        // gets called when player has entered all squares correctly
         GameEvents.OnGameCompletedMethod();
     }
 }
