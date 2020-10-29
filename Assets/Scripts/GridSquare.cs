@@ -10,6 +10,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
 
     public GameObject number_text;
     public GameObject grid_sprite;
+    public GameObject highlightImage;
     public AudioSource sound;
     private int number_ = 0;
     private int correctColor = 0;
@@ -134,6 +135,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public void OnPointerClick(PointerEventData eventData)
     {
         selected_ = true;
+        highlightImage.SetActive(true);
         GameEvents.SquareSelectedMethod(square_index_);
     }
 
@@ -213,6 +215,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         if(square_index_ != square_index)
         {
             selected_ = false;
+            highlightImage.SetActive(false);
         }
     }
 }
