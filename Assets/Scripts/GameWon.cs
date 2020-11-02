@@ -12,6 +12,10 @@ public class GameWon : MonoBehaviour
     public Text timeText;
     public AudioSource sound;
 
+    public List<GameObject> live_images;
+
+    private int livesRemaining;
+
 
     void Start()
     {
@@ -26,9 +30,25 @@ public class GameWon : MonoBehaviour
         {
             sound.Play();
         }
+
+        // player unlocked new level
         int levelReached = PlayerPrefs.GetInt("levelReached") + 1;
         PlayerPrefs.SetInt("levelReached", levelReached);
+
+        // get time player needed from Timer.cs
         timeText.text = Timer.instance.GetTimeText().text;
+
+        // get lives left from Lives.cs
+        livesRemaining = Lives.GetRemainingLives();
+
+        // show how many lives player had left
+        for(int i = 0; i < livesRemaining; i++)
+        {
+            live_images[i].SetActive(true);
+        }
+
+
+
         WinPopup.SetActive(true);
     }
 

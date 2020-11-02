@@ -16,7 +16,7 @@ public class MenuButtons : MonoBehaviour
         SceneManager.LoadScene(name);
     }
 
-    public void muteAudio()
+    public void MuteAudio()
     {
         int audioMuted = PlayerPrefs.GetInt("audioMuted");
         if(audioMuted == 0)
@@ -31,4 +31,10 @@ public class MenuButtons : MonoBehaviour
             audioButton.GetComponent<Image>().sprite = audioOn;
         }
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
 }

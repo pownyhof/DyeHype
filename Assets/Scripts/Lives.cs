@@ -8,7 +8,7 @@ public class Lives : MonoBehaviour
     public List<GameObject> error_images;
     public GameObject gameOverPopUp;
 
-    int lives = 0;
+    private static int lives = 0;
     int errorCount = 0;
 
     void Start()
@@ -45,6 +45,11 @@ public class Lives : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnWrongColor -= WrongColor;
+    }
+
+    public static int GetRemainingLives()
+    {
+        return lives;
     }
 
 }

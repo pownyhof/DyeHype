@@ -11,7 +11,9 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public GameObject number_text;
     public GameObject grid_sprite;
     public GameObject highlightImage;
-    public AudioSource sound;
+    public AudioSource rightSquareEntered;
+    public AudioSource wrongSquareEntered;
+
     private int number_ = 0;
     private int correctColor = 0;
     private bool selected_ = false;
@@ -50,40 +52,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public Sprite red5;
 
     public Sprite defaultSquare;
-
-    public void SetDefaultValue(bool defaultValue)
-    {
-        SquareDefaultValue = defaultValue;
-    }
-
-    public bool GetDefaultValue()
-    {
-        return SquareDefaultValue;
-    }
-
-    public bool IsSelected()
-    {
-        return selected_;
-    }
-
-    public void SetSquareIndex(int index)
-    {
-        square_index_ = index;
-    }
-
-    public void SetCorrectNumber(int number)
-    {
-        correctColor = number;
-    }
-
-    public bool IsCorrectSquareSet()
-    {
-        return number_ == correctColor;
-    }
-
+    public Sprite logo;
 
     void Start()
     {
+        // no square selected at the start of the game
         selected_ = false;
     }
 
@@ -117,6 +90,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
             case 22: rend.sprite = red3; break;
             case 23: rend.sprite = red4; break;
             case 24: rend.sprite = red5; break;
+            case 25: rend.sprite = logo; break;
             default: break;
         }
         if(number_ <= 0)
@@ -159,14 +133,19 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         GameEvents.OnClearSquare -= OnClearSquare;
     }
 
+    // so player can delete wrong entered squares
     public void OnClearSquare()
     {
         SpriteRenderer rend = grid_sprite.GetComponent<SpriteRenderer>();
 
+        // player has selected square that has wrong value
         if (selected_ && !SquareDefaultValue)
         {
+            // set back square value
             number_ = 0;
+            // set back the square image
             rend.sprite = defaultSquare;
+            // show changes
             DisplayText();
         }
     }
@@ -180,6 +159,12 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
             if (number_ != correctColor)
             {
 
+                // if player didnt mute audio, enter square sound gets played
+                int audioMuted = PlayerPrefs.GetInt("audioMuted");
+                if (audioMuted == 0)
+                {
+                    wrongSquareEntered.Play();
+                }
                 // changes Color to red if player enters wrong value
                 var colors = this.colors;
                 colors.normalColor = Color.red;
@@ -196,7 +181,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 int audioMuted = PlayerPrefs.GetInt("audioMuted");
                 if (audioMuted == 0)
                 {
-                    sound.Play();
+                    rightSquareEntered.Play();
                 }
                 
                 // changes color back to white if value is correct
@@ -205,6 +190,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 this.colors = colors;
             }
 
+            // check after every entered square if player solved the entire level
             GameEvents.CheckGameCompletedMethod();
         }
     }
@@ -217,5 +203,35 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
             selected_ = false;
             highlightImage.SetActive(false);
         }
+    }
+
+    public void SetDefaultValue(bool defaultValue)
+    {
+        SquareDefaultValue = defaultValue;
+    }
+
+    public bool GetDefaultValue()
+    {
+        return SquareDefaultValue;
+    }
+
+    public bool IsSelected()
+    {
+        return selected_;
+    }
+
+    public void SetSquareIndex(int index)
+    {
+        square_index_ = index;
+    }
+
+    public void SetCorrectNumber(int number)
+    {
+        correctColor = number;
+    }
+
+    public bool IsCorrectSquareSet()
+    {
+        return number_ == correctColor;
     }
 }
