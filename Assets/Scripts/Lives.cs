@@ -11,10 +11,35 @@ public class Lives : MonoBehaviour
     private static int lives = 0;
     int errorCount = 0;
 
+    public static Lives instance;
+
     void Start()
     {
-        lives = error_images.Count;
-        errorCount = 0;
+        
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            errorCount = Config.ErrorNumber();
+            lives = error_images.Count - errorCount;
+
+            for(int error = 0; error < errorCount; error++)
+            {
+                error_images[error].SetActive(true);
+            }
+        }
+        else
+        {
+            lives = error_images.Count;
+            errorCount = 0;
+        }
+    }
+
+    private void Awake()
+    {
+        if (instance)
+        {
+            Destroy(instance);
+        }
+        instance = this;
     }
 
     private void checkGameOver()
@@ -50,6 +75,11 @@ public class Lives : MonoBehaviour
     public static int GetRemainingLives()
     {
         return lives;
+    }
+
+    public int GetErrorNumber()
+    {
+        return errorCount;
     }
 
 }

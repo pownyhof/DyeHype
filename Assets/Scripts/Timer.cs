@@ -24,7 +24,12 @@ public class Timer : MonoBehaviour
         instance = this;
 
         timerText = GetComponent<Text>();
-        delta_time = 0;
+
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            delta_time = Config.ReadTime();
+        }
+        else { delta_time = 0; }
     }
 
     void Start()
@@ -35,7 +40,7 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(stopTimer == false)
+        if(GameSettings.Instance.GetPause() == false && stopTimer == false)
         {
             delta_time += Time.deltaTime;
             TimeSpan span = TimeSpan.FromSeconds(delta_time);
@@ -71,5 +76,10 @@ public class Timer : MonoBehaviour
     public Text GetTimeText()
     {
         return timerText;
+    }
+
+    public static string GetCurrentTime()
+    {
+        return instance.delta_time.ToString();
     }
 }

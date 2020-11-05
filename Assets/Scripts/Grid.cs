@@ -9,26 +9,47 @@ using UnityEngine.UI;
 
 public class Grid : MonoBehaviour
 {
+    private int selectedLevel;
     public int columns = 0;
     public int rows = 0;
     public float every_square_offset = 0.0f;
     public GameObject grid_square;
     public Vector2 start_position = new Vector2(0.0f, 0.0f);
     public float square_scale = 1.0f;
+
     public Button audioButton;
     public Sprite audioOn;
     public Sprite audioOff;
+    public GameObject levelText;
+
     private List<GameObject> grid_squares_ = new List<GameObject>();
-    int selectedLevel;
+    
 
 
     void Start()
     {
-
         selectedLevel = PlayerPrefs.GetInt("selectedLevel");
-        if (grid_square.GetComponent<GridSquare>() != null)
-            CreateGrid();
-            SetGridNumbers(selectedLevel);      
+        setAudioButton();
+        setLevelText();
+        CreateGrid();
+
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            SetGridFile();
+        }
+        else
+        {
+            var data = GameData.Instance.dyehype_game[selectedLevel];
+            SetGridNumbers(data);      
+        }   
+    }
+
+    void SetGridFile()
+    {
+        selectedLevel = Config.ReadGameLevel();
+        var data = Config.ReadGridData();
+
+        SetGridNumbers(data);
     }
 
     private void OnEnable()
@@ -39,6 +60,27 @@ public class Grid : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.OnCheckGameCompleted -= CheckGameCompleted;
+        //----------------------------------------------------
+        var solved_data = GameData.Instance.dyehype_game[selectedLevel].solved_data;
+        int[] unsolved_data = new int[121];
+
+        for(int i = 0; i < grid_squares_.Count; i++)
+        {
+            var comp = grid_squares_[i].GetComponent<GridSquare>();
+            unsolved_data[i] = comp.GetSquareNumber();       
+        }
+
+        GameData.GameBoardData currentGame = new GameData.GameBoardData(unsolved_data, solved_data);
+
+        // so data gets not saved when player finished a level
+        if (GameSettings.Instance.GetExitAfterWon() == false)
+        {
+            Config.SaveBoardData(currentGame, selectedLevel, Lives.instance.GetErrorNumber());
+        }
+        else
+        {
+            Config.DeleteFile();
+        }
     }
 
 
@@ -46,7 +88,6 @@ public class Grid : MonoBehaviour
     {
         SpawnGridSquares();
         SetSquaresPosition();
-        setAudioButton();
     }
 
 
@@ -59,8 +100,8 @@ public class Grid : MonoBehaviour
             {
                 grid_squares_.Add(Instantiate(grid_square) as GameObject);
                 grid_squares_[grid_squares_.Count - 1].GetComponent<GridSquare>().SetSquareIndex(square_index);
-                grid_squares_[grid_squares_.Count - 1].transform.parent = this.transform; // instantiate this game object as a child of the object holding this script.
-                // grid_squares_[grid_squares_.Count - 1].transform.SetParent(this.transform, false);
+                // grid_squares_[grid_squares_.Count - 1].transform.parent = this.transform; // instantiate this game object as a child of the object holding this script.
+                grid_squares_[grid_squares_.Count - 1].transform.SetParent(this.transform, false);
                 grid_squares_[grid_squares_.Count - 1].transform.localScale = new Vector3(square_scale, square_scale, square_scale);
 
                 square_index++;
@@ -93,9 +134,8 @@ public class Grid : MonoBehaviour
         }
     }
 
-    private void SetGridNumbers(int level)
+    private void SetGridNumbers(GameData.GameBoardData data)
     {
-        var data = GameData.Instance.dyehype_game[level];
 
         for (int index = 0; index < grid_squares_.Count; index++)
         {
@@ -120,6 +160,12 @@ public class Grid : MonoBehaviour
         {         
             audioButton.GetComponent<Image>().sprite = audioOff;
         }
+    }
+
+    private void setLevelText()
+    {
+        int currentLevel = selectedLevel + 1;
+        levelText.GetComponent<Text>().text = "Level " + currentLevel.ToString();
     }
 
     private void CheckGameCompleted()

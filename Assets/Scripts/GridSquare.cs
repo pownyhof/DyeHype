@@ -133,6 +133,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         GameEvents.OnClearSquare -= OnClearSquare;
     }
 
+    public int GetSquareNumber()
+    {
+        return number_;
+    }
+
     // so player can delete wrong entered squares
     public void OnClearSquare()
     {

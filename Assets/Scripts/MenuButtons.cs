@@ -32,6 +32,29 @@ public class MenuButtons : MonoBehaviour
         }
     }
 
+    public void LoadNextLevel()
+    {
+        GameSettings.Instance.SetContinuePreviousGame(false);
+        int nextLevel = PlayerPrefs.GetInt("selectedLevel") + 1;
+        PlayerPrefs.SetInt("selectedLevel", nextLevel);
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void SetPause(bool paused)
+    {
+        GameSettings.Instance.SetPause(paused);
+    }
+
+    public void ContinuePreviousGame(bool continueGame)
+    {
+        GameSettings.Instance.SetContinuePreviousGame(continueGame);
+    }
+
+    public void ExitAfterWon()
+    {
+        GameSettings.Instance.SetExitAfterWon(true);
+    }
+
     public void QuitGame()
     {
         Application.Quit();
