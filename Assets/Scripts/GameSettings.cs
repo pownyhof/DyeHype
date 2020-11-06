@@ -8,6 +8,7 @@ public class GameSettings : MonoBehaviour
     private bool exitAfterWon = false;
     private bool paused = false;
 
+
     public static GameSettings Instance;
 
     public bool GetPause()

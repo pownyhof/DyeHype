@@ -10,6 +10,7 @@ public class MenuButtons : MonoBehaviour
     public Sprite audioOn;
     public Sprite audioOff;
     public Button audioButton;
+    public Button jokerButton;
 
     public void LoadScene(string name)
     {
@@ -53,6 +54,22 @@ public class MenuButtons : MonoBehaviour
     public void ExitAfterWon()
     {
         GameSettings.Instance.SetExitAfterWon(true);
+    }
+
+    public void joker()
+    {
+        int jokerUsed = PlayerPrefs.GetInt("jokerUsed");
+        if (jokerUsed == 0)
+        {
+            jokerButton.GetComponentInChildren<Text>().text = "0";
+            GameEvents.OnJokerUsedMethod();
+        }
+    }
+
+    public void restartGame()
+    {
+        GameSettings.Instance.SetContinuePreviousGame(false);
+        LoadScene("GameScene");
     }
 
     public void QuitGame()

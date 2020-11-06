@@ -13,6 +13,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public GameObject highlightImage;
     public AudioSource rightSquareEntered;
     public AudioSource wrongSquareEntered;
+    
 
     private int number_ = 0;
     private int correctColor = 0;
@@ -58,6 +59,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     {
         // no square selected at the start of the game
         selected_ = false;
+        // joker not yet used
+       if (!GameSettings.Instance.GetContinuePreviousGame())
+        {
+            PlayerPrefs.SetInt("jokerUsed", 0);
+        }
     }
 
     public void DisplayText()
@@ -124,6 +130,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         GameEvents.OnUpdateSquareColor += OnSetNumber;
         GameEvents.OnSquareSelected += OnSquareSelected;
         GameEvents.OnClearSquare += OnClearSquare;
+        GameEvents.OnJokerUsed += OnJokerUsed;
     }
 
     private void OnDisable()
@@ -131,6 +138,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         GameEvents.OnUpdateSquareColor -= OnSetNumber;
         GameEvents.OnSquareSelected -= OnSquareSelected;
         GameEvents.OnClearSquare -= OnClearSquare;
+        GameEvents.OnJokerUsed -= OnJokerUsed;
     }
 
     public int GetSquareNumber()
@@ -185,14 +193,17 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 // if player didnt mute audio, enter square sound gets played
                 int audioMuted = PlayerPrefs.GetInt("audioMuted");
                 if (audioMuted == 0)
-                {
+                {                   
                     rightSquareEntered.Play();
+
+                    // plays additionally another sound when player finished a 2x2 box
+                    GameEvents.OnCheckBoxCompletedMethod(square_index_);
                 }
                 
                 // changes color back to white if value is correct
                 var colors = this.colors;
                 colors.normalColor = Color.white;
-                this.colors = colors;
+                this.colors = colors;           
             }
 
             // check after every entered square if player solved the entire level
@@ -200,9 +211,17 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         }
     }
 
+    private void OnJokerUsed()
+    {
+            // joker sets correct color once for the player
+            OnSetNumber(correctColor);
+            PlayerPrefs.SetInt("jokerUsed", 1);
+    }
+
 
     public void OnSquareSelected(int square_index)
     {
+        // is square is no longer selected disable highlighting
         if(square_index_ != square_index)
         {
             selected_ = false;
@@ -228,6 +247,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public void SetSquareIndex(int index)
     {
         square_index_ = index;
+    }
+
+    public int GetSquareIndex()
+    {
+        return square_index_;
     }
 
     public void SetCorrectNumber(int number)

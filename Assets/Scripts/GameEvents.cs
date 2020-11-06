@@ -68,5 +68,23 @@ public class GameEvents : MonoBehaviour
         if (OnGameCompleted != null)
             OnGameCompleted();
     }
-     
+
+    public delegate void JokerUsed();
+    public static event JokerUsed OnJokerUsed;
+
+    public static void OnJokerUsedMethod()
+    {
+        if (OnJokerUsed != null)
+            OnJokerUsed();
+    }
+
+    public delegate void CheckBoxCompleted(int square_index);
+    public static event CheckBoxCompleted OnCheckBoxCompleted;
+
+    public static void OnCheckBoxCompletedMethod(int square_index)
+    {
+        if (OnCheckBoxCompleted != null)
+            OnCheckBoxCompleted(square_index);
+    }
+
 }
