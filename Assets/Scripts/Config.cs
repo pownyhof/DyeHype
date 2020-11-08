@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System.Text.RegularExpressions;
 
+
 public class Config : MonoBehaviour
 {
 
@@ -29,10 +30,15 @@ public class Config : MonoBehaviour
         string currentTime = "#time:" + Timer.GetCurrentTime();
         string errorNumberString = "#errors:" + errorNumber;
         string boardIndexString = "#boardIndex:" + boardIndex.ToString();
+        string extraCluesString = "#extraClues:";
         string unsolvedString = "#unsolved:";
         string solvedString = "#solved:";
 
-        foreach(var unsolvedData in boardData.unsolved_data)
+        foreach (var extraClue in boardData.clues_data)
+        {
+            extraCluesString += extraClue + ",";
+        }
+        foreach (var unsolvedData in boardData.unsolved_data)
         {
             unsolvedString += unsolvedData.ToString() + ",";
         }
@@ -44,6 +50,7 @@ public class Config : MonoBehaviour
         writer.WriteLine(currentTime);
         writer.WriteLine(errorNumberString);
         writer.WriteLine(boardIndexString);
+        writer.WriteLine(extraCluesString);
         writer.WriteLine(unsolvedString);
         writer.WriteLine(solvedString);
 
@@ -56,23 +63,41 @@ public class Config : MonoBehaviour
         string line;
         StreamReader file = new StreamReader(path);
 
+        string[] extraClues_data = new string[121];
         int[] unsolved_data = new int[121];
         int[] solved_data = new int[121];
 
+        int extraCluesIndex = 0;
         int unsolvedIndex = 0;
         int solvedIndex = 0;
+
 
         while ((line = file.ReadLine()) != null)
         {
             string[] word = line.Split(':');
-            if(word[0] == "#unsolved")
+            if (word[0] == "#extraClues")
             {
                 string[] substrings = Regex.Split(word[1], ",");
 
-                foreach(var value in substrings)
+                foreach (string value in substrings)
+                {
+                    if (extraCluesIndex < 121)
+                    {
+                        Debug.Log(value);
+                        extraClues_data[extraCluesIndex] = value;
+                        extraCluesIndex++;
+                    }
+                }
+            }
+
+            if (word[0] == "#unsolved")
+            {
+                string[] substrings = Regex.Split(word[1], ",");
+
+                foreach (var value in substrings)
                 {
                     int squareNumber = -1;
-                    if(int.TryParse(value, out squareNumber))
+                    if (int.TryParse(value, out squareNumber))
                     {
                         unsolved_data[unsolvedIndex] = squareNumber;
                         unsolvedIndex++;
@@ -97,7 +122,7 @@ public class Config : MonoBehaviour
         }
 
         file.Close();
-        return new GameData.GameBoardData(unsolved_data, solved_data);
+        return new GameData.GameBoardData(extraClues_data, unsolved_data, solved_data);
     }
 
     public static int ReadGameLevel()
@@ -147,7 +172,7 @@ public class Config : MonoBehaviour
         while ((line = file.ReadLine()) != null)
         {
             string[] word = line.Split(':');
-            if(word[0] == "#errors")
+            if (word[0] == "#errors")
             {
                 int.TryParse(word[1], out errors);
             }

@@ -1,5 +1,4 @@
-﻿using System.CodeDom.Compiler;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,30 +11,54 @@ public class MenuButtons : MonoBehaviour
     public Button audioButton;
     public Button jokerButton;
 
+    void Update()
+    {
+        // If player uses Android backarrow instead of menu back buttons
+        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "Menu")
+        {
+            QuitGame();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "GameScene")
+        {
+            SceneManager.LoadScene("LevelMenu");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "LevelMenu")
+        {
+            SceneManager.LoadScene("Menu");
+        }
+    }
+
+    // universal method to load new scenes
     public void LoadScene(string name)
     {
         SceneManager.LoadScene(name);
     }
 
+    // method if player wants to mute audio
     public void MuteAudio()
     {
+        // gets saved in player prefs
         int audioMuted = PlayerPrefs.GetInt("audioMuted");
-        if(audioMuted == 0)
+        if (audioMuted == 0)
         {
-           PlayerPrefs.SetInt("audioMuted", 1);
+            // change player prefs settings and icon in GameScene
+            PlayerPrefs.SetInt("audioMuted", 1);
             audioButton.GetComponent<Image>().sprite = audioOff;
-
         }
         else
         {
-           PlayerPrefs.SetInt("audioMuted", 0);
+            PlayerPrefs.SetInt("audioMuted", 0);
             audioButton.GetComponent<Image>().sprite = audioOn;
         }
     }
 
+    // method for "more!" Button, if player wants to continue playing directly after gameWonPopUp
     public void LoadNextLevel()
     {
         GameSettings.Instance.SetContinuePreviousGame(false);
+        // current level gets always saved in player prefs
         int nextLevel = PlayerPrefs.GetInt("selectedLevel") + 1;
         PlayerPrefs.SetInt("selectedLevel", nextLevel);
         SceneManager.LoadScene("GameScene");
@@ -43,22 +66,28 @@ public class MenuButtons : MonoBehaviour
 
     public void SetPause(bool paused)
     {
+        // if player presse pause icon
         GameSettings.Instance.SetPause(paused);
     }
 
     public void ContinuePreviousGame(bool continueGame)
     {
+        // if true load saved .ini file, else load level that player selected
         GameSettings.Instance.SetContinuePreviousGame(continueGame);
     }
 
+
     public void ExitAfterWon()
     {
+        // set this to true when player completed a level, so gameData to continue a game wont be saved in .ini file
         GameSettings.Instance.SetExitAfterWon(true);
     }
 
+    // method when player presses joker(crown) icon
     public void joker()
     {
         int jokerUsed = PlayerPrefs.GetInt("jokerUsed");
+        // just use Joker if player didnt use one already in current level
         if (jokerUsed == 0)
         {
             jokerButton.GetComponentInChildren<Text>().text = "0";
@@ -66,12 +95,14 @@ public class MenuButtons : MonoBehaviour
         }
     }
 
+    // method when player presses "new try" button in GameScene
     public void restartGame()
     {
         GameSettings.Instance.SetContinuePreviousGame(false);
         LoadScene("GameScene");
     }
 
+    // Quit Application
     public void QuitGame()
     {
         Application.Quit();
