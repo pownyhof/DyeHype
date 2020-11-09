@@ -32,12 +32,14 @@ public class Language : MonoBehaviour
     public static Language Instance;
 
     void Start()
-    {
+    {       
         PopulateStrings();
+        // if user starts application first time, show popUp so he can chose his language
         if(PlayerPrefs.GetInt("playerHasToSetLanguage", 1) == 1)
         {
             languagePopUp.SetActive(true);
         }
+        // if already chosen, set text from rules
         else
         {
             SetRulesText();
@@ -47,8 +49,7 @@ public class Language : MonoBehaviour
     private void Awake()
     {
         if (Instance == null)
-        {
-            DontDestroyOnLoad(this);
+        {         
             Instance = this;
         }
         else
@@ -57,12 +58,14 @@ public class Language : MonoBehaviour
         }
     }
 
+    // fill arrays with strings for better storage and acces in other classes
     public void PopulateStrings()
     {
         rules = new string[6] {rules1_E, rules2_E, rules3_E, rules1_G, rules2_G, rules3_G};
         jokerClue = new string[2] { joker_E, joker_G };
     }
 
+    // gets called when user chose a language
     public void SetLanguage(int language)
     {
         selectedLanguage = language;
@@ -72,6 +75,7 @@ public class Language : MonoBehaviour
         SetRulesText();
     }
 
+    // method to set text correct on rulesBackground
     public void SetRulesText()
     {
         if (PlayerPrefs.GetInt("language") == 0)
