@@ -10,7 +10,10 @@ using UnityEngine.UI;
 
 public class Grid : MonoBehaviour
 {
+    // variables
     private int selectedLevel;
+    private int hitsLevelSix;
+    private int hitsLevelTen;
     private int playsFirstTime = 1;
     public int columns = 0;
     public int rows = 0;
@@ -20,33 +23,67 @@ public class Grid : MonoBehaviour
     public float square_scale = 1.0f;
     public float square_gap = 0.1f;
 
+    // objects
     public Button jokerButton;
     public Button audioButton;
+    public GameObject nextButtonOne;
+    public GameObject nextButtonTwo;
     public Sprite audioOn;
     public Sprite audioOff;
     public GameObject levelText;
     public GameObject rulesPopUp;
+    public GameObject rulesPopUpTwo;
+    public GameObject rulesPopUpThree;
     public GameObject jokerPopUp;
     public AudioSource boxCompletedSound;
 
     // rules text depending on selected language
     string[] rules;
     string[] joker;
+    // first RulesPopUp
     public Text topText;
     public Text midText;
     public Text bottomText;
     public Text jokerText;
-
-
+    // second RulesPopUp
+    public Text topTextTwo;
+    public Text bottomTextTwo;
+    // thirs RulesPopUp
+    public Text topTextThree;
+    public Text midTextThree;
+    public Text bottomTextThree;
 
     private List<GameObject> grid_squares_ = new List<GameObject>();
-
-
 
     void Start()
     {
         selectedLevel = PlayerPrefs.GetInt("selectedLevel");
         playsFirstTime = PlayerPrefs.GetInt("firstTime", 1);
+        hitsLevelSix = PlayerPrefs.GetInt("hitsLevelSix", 1);
+        hitsLevelTen = PlayerPrefs.GetInt("hitsLevelTen", 1);
+
+        if (playsFirstTime == 1)
+        {
+            PlayerPlaysFirstTime();
+        }
+        if ((hitsLevelSix == 1) && (PlayerPrefs.GetInt("levelReached") == 5))
+        {
+            PlayerHitsLevelSix();
+        }
+        if ((hitsLevelTen == 1) && (PlayerPrefs.GetInt("levelReached") == 9))
+        {
+            PlayerHitsLevelTen();
+        }
+        if(PlayerPrefs.GetInt("levelReached") >= 5)
+        {
+            nextButtonOne.SetActive(true);
+        }
+        if(PlayerPrefs.GetInt("levelReached") >= 9)
+        {
+            nextButtonTwo.SetActive(true);
+        }
+
+        Debug.Log(PlayerPrefs.GetInt("levelReached"));
 
         // init audio icon in top panel depending on player muted game or not
         setAudioButton();
@@ -55,11 +92,6 @@ public class Grid : MonoBehaviour
         // set rules and joker text
         SetRulesText();
         CreateGrid();
-
-        if (playsFirstTime == 1)
-        {
-            PlayerPlaysFirstTime();
-        }
 
         if (GameSettings.Instance.GetContinuePreviousGame())
         {
@@ -151,6 +183,173 @@ public class Grid : MonoBehaviour
         }
     }
 
+
+   
+    private void SetSquaresPosition()
+    {
+        var square_rect = grid_squares_[0].GetComponent<RectTransform>();
+        Vector2 offset = new Vector2();
+
+        Vector2 square_gap_number = new Vector2(0.0f, 0.0f);
+        bool rowMoved = false;
+
+        offset.x = square_rect.rect.width * square_rect.transform.localScale.x + every_square_offset;
+        offset.y = square_rect.rect.height * square_rect.transform.localScale.y + every_square_offset;
+
+        int column_number = 0;
+        int row_number = 0;
+
+        foreach (GameObject square in grid_squares_)
+        {
+            if (column_number + 1 > columns)
+            {
+                row_number++;
+                column_number = 0;
+                square_gap_number.x = 0;
+                rowMoved = false;
+            }
+
+            var pos_x_offset = offset.x * column_number + (square_gap_number.x * square_gap);
+            var pos_y_offset = offset.y * row_number + (square_gap_number.y * square_gap);
+
+            if (column_number > -1 && column_number % 2 != 0)
+            {
+                square_gap_number.x++;
+                pos_x_offset += square_gap;
+            }
+            if (row_number > -1 && row_number % 2 != 0 && rowMoved == false)
+            {
+                rowMoved = true;
+                square_gap_number.y++;
+                pos_y_offset += square_gap;
+            }
+            square.GetComponent<RectTransform>().anchoredPosition = new Vector3(start_position.x + pos_x_offset, start_position.y - pos_y_offset);
+            column_number++;
+        }
+    }
+
+    private void SetGridNumbers(GameData.GameBoardData data)
+    {
+
+        for (int index = 0; index < grid_squares_.Count; index++)
+        {
+
+            grid_squares_[index].GetComponent<GridSquare>().SetClue(data.clues_data[index]);
+            grid_squares_[index].GetComponent<GridSquare>().SetNumber(data.unsolved_data[index]);
+            grid_squares_[index].GetComponent<GridSquare>().SetCorrectNumber(data.solved_data[index]);
+
+            // prevents player from changing outside clue squares and already correct squares
+            grid_squares_[index].GetComponent<GridSquare>().SetDefaultValue((index % 11 == 0) || (index < 11) || (data.unsolved_data[index] != 0 && data.unsolved_data[index] == data.solved_data[index]));
+
+        }
+    }
+
+    private void setAudioButton()
+    {
+        int audioMuted = PlayerPrefs.GetInt("audioMuted", 0);
+        if (audioMuted == 0)
+        {
+            audioButton.GetComponent<Image>().sprite = audioOn;
+        }
+        else
+        {
+            audioButton.GetComponent<Image>().sprite = audioOff;
+        }
+    }
+
+    private void setLevelText()
+    {
+        int currentLevel = selectedLevel + 1;
+        levelText.GetComponent<Text>().text = "Level " + currentLevel.ToString();
+    }
+
+    // sets text and rules depending on language that player chose
+    public void SetRulesText()
+    {
+        joker = Language.Instance.GetJokerClue();
+        if (PlayerPrefs.GetInt("language") == 0)
+        {
+            rules = Language.Instance.GetRules(0);
+            jokerText.text = joker[0];
+        }
+        if (PlayerPrefs.GetInt("language") == 1)
+        {
+            rules = Language.Instance.GetRules(1);
+            jokerText.text = joker[1];
+        }
+        if (PlayerPrefs.GetInt("language") == 2)
+        {
+            rules = Language.Instance.GetRules(2);
+            jokerText.text = joker[2];
+        }
+          
+        topText.text = rules[0];
+        midText.text = rules[1];
+        bottomText.text = rules[2];
+        topTextTwo.text = rules[3];
+        bottomTextTwo.text = rules[4];
+        topTextThree.text = rules[5];
+        midTextThree.text = rules[6];
+        bottomTextThree.text = rules[7];
+    }
+
+    // if it's users first time playing activate rulesPopUp automatically
+    private void PlayerPlaysFirstTime()
+    {
+        rulesPopUp.SetActive(true);
+        // save in player prefs firstTime to false, so next time it wont show up automatically
+        PlayerPrefs.SetInt("firstTime", 0);
+        // direct users attention to joker option
+        Invoke("showJokerButton", 80);
+    }
+
+    private void PlayerHitsLevelSix()
+    {
+        rulesPopUpTwo.SetActive(true);
+        // save in player prefs firstTime to false, so next time it wont show up automatically
+        PlayerPrefs.SetInt("hitsLevelSix", 0);
+    }
+
+    private void PlayerHitsLevelTen()
+    {
+        rulesPopUpThree.SetActive(true);
+        // save in player prefs firstTime to false, so next time it wont show up automatically
+        PlayerPrefs.SetInt("hitsLevelTen", 0);
+    }
+
+    /* public bool checkSquareSelected()
+     {
+         bool selected = false;
+         for (int index = 0; index < grid_squares_.Count; index++)
+         {
+             if (grid_squares_[index].GetComponent<GridSquare>().IsSelected() == true)
+             {
+                 selected = true;
+             }
+         }
+         return selected;
+     } */
+
+    private void showJokerButton()
+    {
+        jokerPopUp.SetActive(true);
+    }
+
+    private void CheckGameCompleted()
+    {
+        // gets called every time player enters a square
+        foreach (var square in grid_squares_)
+        {
+            var comp = square.GetComponent<GridSquare>();
+            // if one square is still wrong player has to continue game
+            if (comp.IsCorrectSquareSet() == false)
+            {
+                return;
+            }
+        }
+        // gets called when player has entered all squares correctly
+        GameEvents.OnGameCompletedMethod();
+    }
 
     // checks every time after player enters a square if the entered square completes a 2x2 Box so a different sound can be played
     private void OnCheckBoxCompleted(int squareIndex)
@@ -277,157 +476,5 @@ public class Grid : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void SetSquaresPosition()
-    {
-        var square_rect = grid_squares_[0].GetComponent<RectTransform>();
-        Vector2 offset = new Vector2();
-
-        Vector2 square_gap_number = new Vector2(0.0f, 0.0f);
-        bool rowMoved = false;
-
-        offset.x = square_rect.rect.width * square_rect.transform.localScale.x + every_square_offset;
-        offset.y = square_rect.rect.height * square_rect.transform.localScale.y + every_square_offset;
-
-        int column_number = 0;
-        int row_number = 0;
-
-        foreach (GameObject square in grid_squares_)
-        {
-            if (column_number + 1 > columns)
-            {
-                row_number++;
-                column_number = 0;
-                square_gap_number.x = 0;
-                rowMoved = false;
-            }
-
-            var pos_x_offset = offset.x * column_number + (square_gap_number.x * square_gap);
-            var pos_y_offset = offset.y * row_number + (square_gap_number.y * square_gap);
-
-            if (column_number > -1 && column_number % 2 != 0)
-            {
-                square_gap_number.x++;
-                pos_x_offset += square_gap;
-            }
-            if (row_number > -1 && row_number % 2 != 0 && rowMoved == false)
-            {
-                rowMoved = true;
-                square_gap_number.y++;
-                pos_y_offset += square_gap;
-            }
-            square.GetComponent<RectTransform>().anchoredPosition = new Vector3(start_position.x + pos_x_offset, start_position.y - pos_y_offset);
-            column_number++;
-        }
-    }
-
-    private void SetGridNumbers(GameData.GameBoardData data)
-    {
-
-        for (int index = 0; index < grid_squares_.Count; index++)
-        {
-
-            grid_squares_[index].GetComponent<GridSquare>().SetClue(data.clues_data[index]);
-            grid_squares_[index].GetComponent<GridSquare>().SetNumber(data.unsolved_data[index]);
-            grid_squares_[index].GetComponent<GridSquare>().SetCorrectNumber(data.solved_data[index]);
-
-            // prevents player from changing outside clue squares and already correct squares
-            grid_squares_[index].GetComponent<GridSquare>().SetDefaultValue((index % 11 == 0) || (index < 11) || (data.unsolved_data[index] != 0 && data.unsolved_data[index] == data.solved_data[index]));
-
-        }
-    }
-
-    private void setAudioButton()
-    {
-        int audioMuted = PlayerPrefs.GetInt("audioMuted", 0);
-        if (audioMuted == 0)
-        {
-            audioButton.GetComponent<Image>().sprite = audioOn;
-        }
-        else
-        {
-            audioButton.GetComponent<Image>().sprite = audioOff;
-        }
-    }
-
-    private void setLevelText()
-    {
-        int currentLevel = selectedLevel + 1;
-        levelText.GetComponent<Text>().text = "Level " + currentLevel.ToString();
-    }
-
-    // sets text and rules depending on language that player chose
-    public void SetRulesText()
-    {
-        
-        rules = Language.Instance.GetRules();
-        joker = Language.Instance.GetJokerClue();
-
-        // English
-        if (PlayerPrefs.GetInt("language") == 0)
-        {
-            topText.text = rules[0];
-            midText.text = rules[1];
-            bottomText.text = rules[2];
-            jokerText.text = joker[0];
-        }
-        // German
-        if (PlayerPrefs.GetInt("language") == 1)
-        {
-            topText.text = rules[3];
-            midText.text = rules[4];
-            bottomText.text = rules[5];
-            jokerText.text = joker[1];
-        }
-        // Spanish
-        if (PlayerPrefs.GetInt("language") == 2)
-        {
-
-        }
-    }
-
-    // if it's users first time playing activate rulesPopUp automatically
-    private void PlayerPlaysFirstTime()
-    {
-        rulesPopUp.SetActive(true);
-        // save in player prefs firstTime to false, so next time it wont show up automatically
-        PlayerPrefs.SetInt("firstTime", 0);
-        // direct users attention to joker option
-        Invoke("showJokerButton", 80);
-    }
-
-    /* public bool checkSquareSelected()
-     {
-         bool selected = false;
-         for (int index = 0; index < grid_squares_.Count; index++)
-         {
-             if (grid_squares_[index].GetComponent<GridSquare>().IsSelected() == true)
-             {
-                 selected = true;
-             }
-         }
-         return selected;
-     } */
-
-    private void showJokerButton()
-    {
-        jokerPopUp.SetActive(true);
-    }
-
-    private void CheckGameCompleted()
-    {
-        // gets called every time player enters a square
-        foreach (var square in grid_squares_)
-        {
-            var comp = square.GetComponent<GridSquare>();
-            // if one square is still wrong player has to continue game
-            if (comp.IsCorrectSquareSet() == false)
-            {
-                return;
-            }
-        }
-        // gets called when player has entered all squares correctly
-        GameEvents.OnGameCompletedMethod();
     }
 }
