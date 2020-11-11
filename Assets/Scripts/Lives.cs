@@ -15,7 +15,7 @@ public class Lives : MonoBehaviour
 
     void Start()
     {
-        
+        // when player resumes a game set how many live player has remaining
         if (GameSettings.Instance.GetContinuePreviousGame())
         {
             errorCount = Config.ErrorNumber();
@@ -42,6 +42,7 @@ public class Lives : MonoBehaviour
         instance = this;
     }
 
+    // if player made 3 mistakes call GameOver event and show gameOverPopUp
     private void checkGameOver()
     {
         if(lives <= 0)
@@ -51,6 +52,7 @@ public class Lives : MonoBehaviour
         }
     }
 
+    // if player makes mistake set one error image
     private void WrongColor()
     {
         if(errorCount < error_images.Count)
@@ -64,11 +66,13 @@ public class Lives : MonoBehaviour
 
     private void OnEnable()
     {
+        // subscribe to OnWrongColor event
         GameEvents.OnWrongColor += WrongColor;
     }
 
     private void OnDisable()
     {
+        // unsubscribe to OnWrongColor event
         GameEvents.OnWrongColor -= WrongColor;
     }
 

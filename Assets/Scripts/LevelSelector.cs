@@ -32,7 +32,7 @@ public class LevelSelector : MonoBehaviour
     public void Select(int level)
     {
         // save selected level in player prefs and then load GameScene
-        PlayerPrefs.SetInt("selectedLevel", level);
+        PlayerPrefs.SetInt("selectedLevel", level);       
         SceneManager.LoadScene("GameScene");
     }
 }

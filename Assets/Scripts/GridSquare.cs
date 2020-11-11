@@ -15,21 +15,15 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public AudioSource rightSquareEntered;
     public AudioSource wrongSquareEntered;
 
-
     private int number_ = 0;
     private int correctColor = 0;
     private bool selected_ = false;
     private int square_index_ = -1;
     private bool SquareDefaultValue = false;
 
-
-    // #1F456E
     public Sprite blue;
-    // #5da05a
     public Sprite green;
-    // #fbec5d
     public Sprite yellow;
-    // #be213e
     public Sprite red;
     // sprites for clues
     public Sprite blue1;
@@ -70,7 +64,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public void DisplayText()
     {
         SpriteRenderer rend = grid_sprite.GetComponent<SpriteRenderer>();
-
+        // set sprite according to selected GameData
         switch (number_)
         {
             case 1: rend.sprite = blue; break;
@@ -108,6 +102,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
 
     public void SetClue(string clueString)
     {
+        // set clues inside the grid according to selected GameData
         clue.GetComponent<Text>().text = clueString;
         if (clueString != "-")
         {
@@ -118,11 +113,12 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
 
     public void SetNumber(int number)
     {
+        // behind every sprite is a number in an int array, so later it can be easy checked if player set correct number/sprite and if player has set all numbersor sprites correct/has won the game
         number_ = number;
         DisplayText();
-
     }
 
+    // called when player selects a square
     public void OnPointerClick(PointerEventData eventData)
     {
         selected_ = true;
@@ -138,6 +134,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
 
     private void OnEnable()
     {
+        // subscribe to events
         GameEvents.OnUpdateSquareColor += OnSetNumber;
         GameEvents.OnSquareSelected += OnSquareSelected;
         GameEvents.OnClearSquare += OnClearSquare;
@@ -146,15 +143,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
 
     private void OnDisable()
     {
+        // unsubscribe to events
         GameEvents.OnUpdateSquareColor -= OnSetNumber;
         GameEvents.OnSquareSelected -= OnSquareSelected;
         GameEvents.OnClearSquare -= OnClearSquare;
         GameEvents.OnJokerUsed -= OnJokerUsed;
-    }
-
-    public int GetSquareNumber()
-    {
-        return number_;
     }
 
     // so player can delete wrong entered squares
@@ -232,7 +225,6 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         }
     }
 
-
     public void OnSquareSelected(int square_index)
     {
         // is square is no longer selected disable highlighting
@@ -243,6 +235,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         }
     }
 
+    // setters and getters
     public void SetDefaultValue(bool defaultValue)
     {
         SquareDefaultValue = defaultValue;
@@ -266,6 +259,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public int GetSquareIndex()
     {
         return square_index_;
+    }
+
+    public int GetSquareNumber()
+    {
+        return number_;
     }
 
     public void SetCorrectNumber(int number)

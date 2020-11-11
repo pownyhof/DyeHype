@@ -16,12 +16,14 @@ public class ResumeButton : MonoBehaviour
 
     void Start()
     {
+        // deactivate resume button if no gameData.ini exists
         if(Config.GameFileExist() == false)
         {
             gameObject.GetComponent<Button>().interactable = false;
             timeText.text = " ";
             levelText.text = " ";
         }
+        // else set text and level to resumeButton
         else
         {
             float delta_time = Config.ReadTime();

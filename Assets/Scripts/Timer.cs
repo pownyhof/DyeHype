@@ -40,6 +40,7 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // set clock text while game is running
         if(GameSettings.Instance.GetPause() == false && stopTimer == false)
         {
             delta_time += Time.deltaTime;
@@ -60,16 +61,19 @@ public class Timer : MonoBehaviour
 
     public void OnGameOver()
     {
+        // stop counting time when player made 3 mistakes
         stopTimer = true;
     }
 
     private void OnEnable()
     {
+        // subscribe to OnGameOver event
         GameEvents.OnGameOver += OnGameOver;
     }
 
     private void OnDisable()
     {
+        // unsubscribe to OnGameOver event
         GameEvents.OnGameOver -= OnGameOver;
     }
 

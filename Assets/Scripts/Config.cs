@@ -17,7 +17,7 @@ public class Config : MonoBehaviour
     private static string file = @"\gameData.ini";
     private static string path = dir + file;
 
-
+    // delete file if player completes a level
     public static void DeleteFile()
     {
         File.Delete(path);
@@ -25,6 +25,7 @@ public class Config : MonoBehaviour
 
     public static void SaveBoardData(GameData.GameBoardData boardData, int boardIndex, int errorNumber)
     {
+        // save time, levelSelected, gameData and mistakes
         File.WriteAllText(path, string.Empty);
         StreamWriter writer = new StreamWriter(path, false);
         string currentTime = "#time:" + Timer.GetCurrentTime();
@@ -60,6 +61,7 @@ public class Config : MonoBehaviour
 
     public static GameData.GameBoardData ReadGridData()
     {
+        // read gameData from gameData.ini
         string line;
         StreamReader file = new StreamReader(path);
 
@@ -127,6 +129,7 @@ public class Config : MonoBehaviour
 
     public static int ReadGameLevel()
     {
+        // read selectedLevel from gameData.ini
         int level = -1;
         string line;
         StreamReader file = new StreamReader(path);
@@ -146,6 +149,7 @@ public class Config : MonoBehaviour
 
     public static float ReadTime()
     {
+        // read time from gameData.ini
         float time = -1.0f;
         string line;
         StreamReader file = new StreamReader(path);
@@ -165,6 +169,7 @@ public class Config : MonoBehaviour
 
     public static int ErrorNumber()
     {
+        // read mistakes from gameData.ini
         int errors = 0;
         string line;
         StreamReader file = new StreamReader(path);
@@ -182,6 +187,7 @@ public class Config : MonoBehaviour
         return errors;
     }
 
+    // check if gameData.ini exists
     public static bool GameFileExist()
     {
         return File.Exists(path);

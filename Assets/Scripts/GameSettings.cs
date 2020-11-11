@@ -21,6 +21,7 @@ public class GameSettings : MonoBehaviour
         paused = set;
     }
 
+    // gets set when player completes a level, so gameData wont be saved for resume button 
     public void SetExitAfterWon(bool set)
     {
         exitAfterWon = set;
@@ -32,6 +33,7 @@ public class GameSettings : MonoBehaviour
         return exitAfterWon;
     }
 
+    // if true gameData.ini gets loaded, else new game
     public void SetContinuePreviousGame(bool set)
     {
         continuePreviousGame = set;

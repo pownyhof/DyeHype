@@ -18,18 +18,18 @@ public class Grid : MonoBehaviour
     public int columns = 0;
     public int rows = 0;
     public float every_square_offset = 0.0f;
-    public GameObject grid_square;
     public Vector2 start_position = new Vector2(0.0f, 0.0f);
     public float square_scale = 1.0f;
     public float square_gap = 0.1f;
 
     // objects
+    public Sprite audioOn;
+    public Sprite audioOff;
     public Button jokerButton;
     public Button audioButton;
     public GameObject nextButtonOne;
     public GameObject nextButtonTwo;
-    public Sprite audioOn;
-    public Sprite audioOff;
+    public GameObject grid_square;
     public GameObject levelText;
     public GameObject rulesPopUp;
     public GameObject rulesPopUpTwo;
@@ -57,34 +57,8 @@ public class Grid : MonoBehaviour
 
     void Start()
     {
-        selectedLevel = PlayerPrefs.GetInt("selectedLevel");
-        playsFirstTime = PlayerPrefs.GetInt("firstTime", 1);
-        hitsLevelSix = PlayerPrefs.GetInt("hitsLevelSix", 1);
-        hitsLevelTen = PlayerPrefs.GetInt("hitsLevelTen", 1);
-
-        if (playsFirstTime == 1)
-        {
-            PlayerPlaysFirstTime();
-        }
-        if ((hitsLevelSix == 1) && (PlayerPrefs.GetInt("levelReached") == 5))
-        {
-            PlayerHitsLevelSix();
-        }
-        if ((hitsLevelTen == 1) && (PlayerPrefs.GetInt("levelReached") == 9))
-        {
-            PlayerHitsLevelTen();
-        }
-        if(PlayerPrefs.GetInt("levelReached") >= 5)
-        {
-            nextButtonOne.SetActive(true);
-        }
-        if(PlayerPrefs.GetInt("levelReached") >= 9)
-        {
-            nextButtonTwo.SetActive(true);
-        }
-
-        Debug.Log(PlayerPrefs.GetInt("levelReached"));
-
+        // check for example is user is playing the first time or has hit a certain level
+        checkPlayPrefs();
         // init audio icon in top panel depending on player muted game or not
         setAudioButton();
         // tiny text on the bottom left depending on level user is playing
@@ -104,14 +78,44 @@ public class Grid : MonoBehaviour
             {
                 jokerButton.GetComponentInChildren<Text>().text = "0";
             }
-
+            // call method to load gameData from gameData.ini if player continued a game
             SetGridFile();
         }
         else
         {
+            // else load data from selectedLevel
             jokerButton.GetComponentInChildren<Text>().text = "1";
             var data = GameData.Instance.dyehype_game[selectedLevel];
             SetGridNumbers(data);
+        }
+    }
+
+    private void checkPlayPrefs()
+    {
+        selectedLevel = PlayerPrefs.GetInt("selectedLevel");
+        playsFirstTime = PlayerPrefs.GetInt("firstTime", 1);
+        hitsLevelSix = PlayerPrefs.GetInt("hitsLevelSix", 1);
+        hitsLevelTen = PlayerPrefs.GetInt("hitsLevelTen", 1);
+
+        if (playsFirstTime == 1)
+        {
+            PlayerPlaysFirstTime();
+        }
+        if ((hitsLevelSix == 1) && (PlayerPrefs.GetInt("levelReached") == 5))
+        {
+            PlayerHitsLevelSix();
+        }
+        if ((hitsLevelTen == 1) && (PlayerPrefs.GetInt("levelReached") == 9))
+        {
+            PlayerHitsLevelTen();
+        }
+        if (PlayerPrefs.GetInt("levelReached") >= 5)
+        {
+            nextButtonOne.SetActive(true);
+        }
+        if (PlayerPrefs.GetInt("levelReached") >= 9)
+        {
+            nextButtonTwo.SetActive(true);
         }
     }
 
@@ -125,15 +129,18 @@ public class Grid : MonoBehaviour
 
     private void OnEnable()
     {
+        // subscribe to events
         GameEvents.OnCheckGameCompleted += CheckGameCompleted;
         GameEvents.OnCheckBoxCompleted += OnCheckBoxCompleted;
     }
 
     private void OnDisable()
     {
+        // unsubscribe to events
         GameEvents.OnCheckGameCompleted -= CheckGameCompleted;
         GameEvents.OnCheckBoxCompleted -= OnCheckBoxCompleted;
         //----------------------------------------------------
+        // save data to gameData.ini when player leaves game and has level not yet completed
         var clues_data = GameData.Instance.dyehype_game[selectedLevel].clues_data;
         var solved_data = GameData.Instance.dyehype_game[selectedLevel].solved_data;
         int[] unsolved_data = new int[121];
@@ -157,7 +164,6 @@ public class Grid : MonoBehaviour
         }
     }
 
-
     private void CreateGrid()
     {
         SpawnGridSquares();
@@ -172,10 +178,11 @@ public class Grid : MonoBehaviour
         {
             for (int column = 0; column < columns; column++)
             {
+                // create a gridSquare Object
                 grid_squares_.Add(Instantiate(grid_square) as GameObject);
                 grid_squares_[grid_squares_.Count - 1].GetComponent<GridSquare>().SetSquareIndex(square_index);
                 // grid_squares_[grid_squares_.Count - 1].transform.parent = this.transform; // instantiate this game object as a child of the object holding this script.
-                grid_squares_[grid_squares_.Count - 1].transform.SetParent(this.transform, false);
+                grid_squares_[grid_squares_.Count - 1].transform.SetParent(this.transform, false); // according to unity better to use this method that the one above
                 grid_squares_[grid_squares_.Count - 1].transform.localScale = new Vector3(square_scale, square_scale, square_scale);
 
                 square_index++;
@@ -183,14 +190,13 @@ public class Grid : MonoBehaviour
         }
     }
 
-
-   
     private void SetSquaresPosition()
     {
         var square_rect = grid_squares_[0].GetComponent<RectTransform>();
-        Vector2 offset = new Vector2();
 
+        Vector2 offset = new Vector2();
         Vector2 square_gap_number = new Vector2(0.0f, 0.0f);
+
         bool rowMoved = false;
 
         offset.x = square_rect.rect.width * square_rect.transform.localScale.x + every_square_offset;
@@ -212,6 +218,7 @@ public class Grid : MonoBehaviour
             var pos_x_offset = offset.x * column_number + (square_gap_number.x * square_gap);
             var pos_y_offset = offset.y * row_number + (square_gap_number.y * square_gap);
 
+            // needed so every second 'gap line' is bigger, so player can better recognize the 2x2 big boxes
             if (column_number > -1 && column_number % 2 != 0)
             {
                 square_gap_number.x++;
@@ -233,7 +240,7 @@ public class Grid : MonoBehaviour
 
         for (int index = 0; index < grid_squares_.Count; index++)
         {
-
+            // set clues inside grid, set starting number/sprite and set solution number/sprite
             grid_squares_[index].GetComponent<GridSquare>().SetClue(data.clues_data[index]);
             grid_squares_[index].GetComponent<GridSquare>().SetNumber(data.unsolved_data[index]);
             grid_squares_[index].GetComponent<GridSquare>().SetCorrectNumber(data.solved_data[index]);
@@ -246,6 +253,7 @@ public class Grid : MonoBehaviour
 
     private void setAudioButton()
     {
+        // init correct audio button depending on player muted game or not
         int audioMuted = PlayerPrefs.GetInt("audioMuted", 0);
         if (audioMuted == 0)
         {
@@ -267,6 +275,7 @@ public class Grid : MonoBehaviour
     public void SetRulesText()
     {
         joker = Language.Instance.GetJokerClue();
+        // check which language player has selected
         if (PlayerPrefs.GetInt("language") == 0)
         {
             rules = Language.Instance.GetRules(0);
@@ -283,6 +292,7 @@ public class Grid : MonoBehaviour
             jokerText.text = joker[2];
         }
           
+        // set text fields of the different RulesPopUps
         topText.text = rules[0];
         midText.text = rules[1];
         bottomText.text = rules[2];
@@ -316,19 +326,6 @@ public class Grid : MonoBehaviour
         // save in player prefs firstTime to false, so next time it wont show up automatically
         PlayerPrefs.SetInt("hitsLevelTen", 0);
     }
-
-    /* public bool checkSquareSelected()
-     {
-         bool selected = false;
-         for (int index = 0; index < grid_squares_.Count; index++)
-         {
-             if (grid_squares_[index].GetComponent<GridSquare>().IsSelected() == true)
-             {
-                 selected = true;
-             }
-         }
-         return selected;
-     } */
 
     private void showJokerButton()
     {

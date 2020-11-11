@@ -9,22 +9,10 @@ public class ColorButtons : Selectable, IPointerClickHandler, ISubmitHandler, IP
 {
     public int value = 0;
 
-    void Start()
-    {
-
-    }
-
-
-    void Update()
-    {
-
-    }
-
     public void OnPointerClick(PointerEventData eventData)
     {
         GameEvents.UpdateSquareColorMethod(value);
     }
-
 
     public void OnSubmit(BaseEventData eventData)
     {

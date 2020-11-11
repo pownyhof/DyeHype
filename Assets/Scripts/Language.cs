@@ -4,6 +4,8 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
 public class Language : MonoBehaviour
 {
     //-strings for rules and jokerClue------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -39,13 +41,38 @@ public class Language : MonoBehaviour
     private string joker_G = "Du hast einen Joker pro Spiel! Wähle ein Feld und der Joker füllt es für dich mit der richtigen Farbe aus! Viel Spaß!";
     private string joker_S = "";
 
+    private string gameWon1_E = "Your time:";
+    private string gameWon2_E = "Level completed:";
+    private string gameWon3_E = "Lives remaining:";
+    private string gameWon4_E = "Joker used:";
+    private string gameWon5_E = "Joker not used:";
+    private string gameWon6_E = "Total Score:";
+
+    private string gameWon1_G = "Deine Zeit:";
+    private string gameWon2_G = "Level geschafft:";
+    private string gameWon3_G = "Leben übrig:";
+    private string gameWon4_G = "Joker benutzt:";
+    private string gameWon5_G = "Joker nicht benutzt:";
+    private string gameWon6_G = "Gesamtpunktzahl:";
+
+    private string gameWon1_S = "Tu tiempo:";
+    private string gameWon2_S = "Nivel completado:";
+    private string gameWon3_S = "Vidas restantes:";
+    private string gameWon4_S = "Joker usado:";
+    private string gameWon5_S = "Joker no usado:";
+    private string gameWon6_S = "Puntaje total:";
+
     //-strings for rules and jokerClue------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-   
+
+    public InputField playerName;
     private int selectedLanguage = 0;
     private string[] rules_english;
     private string[] rules_german;
     private string[] rules_spanish;
     private string[] jokerClue;
+    private string[] gameWon_english;
+    private string[] gameWon_german;
+    private string[] gameWon_spanish;
 
     // for rulesPopUp
     public Text topText;
@@ -53,6 +80,7 @@ public class Language : MonoBehaviour
     public Text bottomText;
 
     public GameObject languagePopUp;
+    public GameObject ErrorPopUp;
 
     public static Language Instance;
 
@@ -85,15 +113,27 @@ public class Language : MonoBehaviour
         rules_german = new string[8] {rules1_G, rules2_G, rules3_G, rules4_G, rules5_G, rules6_G, rules7_G, rules8_G };
         rules_spanish = new string[8] { rules1_S, rules2_S, rules3_S, rules4_S, rules5_S, rules6_S, rules7_S ,rules8_S };
         jokerClue = new string[3] { joker_E, joker_G, joker_S };
+        gameWon_english = new string[6] { gameWon1_E,gameWon2_E,gameWon3_E,gameWon4_E,gameWon5_E,gameWon6_E};
+        gameWon_german = new string[6] { gameWon1_G,gameWon2_G,gameWon3_G,gameWon4_G,gameWon5_G,gameWon6_G};
+        gameWon_spanish = new string[6] { gameWon1_S,gameWon2_S,gameWon3_S,gameWon4_S,gameWon5_S,gameWon6_S};
     }
 
     // gets called when user chose a language
     public void SetLanguage(int language)
     {
-        selectedLanguage = language;
-        PlayerPrefs.SetInt("language", selectedLanguage);
-        PlayerPrefs.SetInt("playerHasToSetLanguage", 0);
-        languagePopUp.SetActive(false);
+        
+        if (PlayfabManager.Instance.UpdatePlayerName(playerName.text))
+        {
+            selectedLanguage = language;
+            PlayerPrefs.SetInt("language", selectedLanguage);
+            PlayerPrefs.SetInt("playerHasToSetLanguage", 0);
+            languagePopUp.SetActive(false);
+        }
+        else
+        {
+            // Display error to user
+            ErrorPopUp.SetActive(true);
+        }
     }
 
     public string[] GetRules(int rules)
@@ -119,6 +159,26 @@ public class Language : MonoBehaviour
     public string[] GetJokerClue()
     {
         return jokerClue;
+    }
+
+    public string[] GetGameWonText(int rules)
+    {
+        if (rules == 0)
+        {
+            return gameWon_english;
+        }
+
+        if (rules == 1)
+        {
+            return gameWon_german;
+        }
+
+        if (rules == 2)
+        {
+            return gameWon_spanish;
+        }
+        // if all ifs wrong, return english and hope user speaks english ^_^
+        return gameWon_english;
     }
 
 }
