@@ -130,7 +130,8 @@ public class GameWon : MonoBehaviour
         textOverTime.text = gameWonText[0];
         levelCompleted.text = gameWonText[1];
         livesRemainingText.text = gameWonText[2];
-        if (PlayerPrefs.GetInt("jokerUsed") == 0)
+        int jokerUsedbool = PlayerPrefs.GetInt("jokerUsed");
+        if (jokerUsedbool == 0)
         {
             jokerUsed.text = gameWonText[4];
         }

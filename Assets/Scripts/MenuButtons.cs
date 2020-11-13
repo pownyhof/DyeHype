@@ -11,12 +11,25 @@ public class MenuButtons : MonoBehaviour
     public Button audioButton;
     public Button jokerButton;
 
+    public GameObject optionsPopUp;
+    public GameObject rankingPopUp;
+
     void Update()
     {
         // If player uses Android backarrow instead of menu back buttons
-        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "Menu")
+        if ((Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "Menu") && (optionsPopUp.activeSelf == false) && (rankingPopUp.activeSelf == false))
         {
             QuitGame();
+        }
+
+        if ((Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "Menu") && (optionsPopUp.activeSelf == true))
+        {
+            optionsPopUp.SetActive(false);
+        }
+
+        if ((Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "Menu") && (rankingPopUp.activeSelf == true))
+        {
+            rankingPopUp.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name == "GameScene")

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Language : MonoBehaviour
 {
-    //-strings for rules and jokerClue------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-strings for rules, jokerClue and gameWonPopUp------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
     private string rules1_E = "You have to fill out the WHOLE grid with the colors red, blue, green and yellow. Thereby in each 2x2 Box every color has to occur exactly ONCE. Furthermore squares with the same color are not allowed to touch each other vertically or horizontally ! Example red square:";
     private string rules2_E = "Additionally clues on the outside tell you how many squares of that specific color occur in that row or column. Example:";
@@ -45,14 +45,14 @@ public class Language : MonoBehaviour
     private string gameWon2_E = "Level completed:";
     private string gameWon3_E = "Lives remaining:";
     private string gameWon4_E = "Joker used:";
-    private string gameWon5_E = "Joker not used:";
+    private string gameWon5_E = "Joker left:";
     private string gameWon6_E = "Total Score:";
 
     private string gameWon1_G = "Deine Zeit:";
     private string gameWon2_G = "Level geschafft:";
     private string gameWon3_G = "Leben übrig:";
     private string gameWon4_G = "Joker benutzt:";
-    private string gameWon5_G = "Joker nicht benutzt:";
+    private string gameWon5_G = "Joker übrig:";
     private string gameWon6_G = "Gesamtpunktzahl:";
 
     private string gameWon1_S = "Tu tiempo:";
@@ -62,7 +62,7 @@ public class Language : MonoBehaviour
     private string gameWon5_S = "Joker no usado:";
     private string gameWon6_S = "Puntaje total:";
 
-    //-strings for rules and jokerClue------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //-strings for rules, jokerClue and gameWonPopUp------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public InputField playerName;
     private int selectedLanguage = 0;
@@ -73,11 +73,6 @@ public class Language : MonoBehaviour
     private string[] gameWon_english;
     private string[] gameWon_german;
     private string[] gameWon_spanish;
-
-    // for rulesPopUp
-    public Text topText;
-    public Text midText;
-    public Text bottomText;
 
     public GameObject languagePopUp;
     public GameObject ErrorPopUp;
@@ -121,9 +116,10 @@ public class Language : MonoBehaviour
     // gets called when user chose a language
     public void SetLanguage(int language)
     {
-        
+        // updates playerName in PlayfabManager class, if it worked it returns true
         if (PlayfabManager.Instance.UpdatePlayerName(playerName.text))
         {
+            // then set language player chose and deactivate starting languagePopUp
             selectedLanguage = language;
             PlayerPrefs.SetInt("language", selectedLanguage);
             PlayerPrefs.SetInt("playerHasToSetLanguage", 0);
@@ -180,5 +176,4 @@ public class Language : MonoBehaviour
         // if all ifs wrong, return english and hope user speaks english ^_^
         return gameWon_english;
     }
-
 }
