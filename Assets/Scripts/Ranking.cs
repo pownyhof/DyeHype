@@ -25,14 +25,14 @@ public class Ranking : MonoBehaviour
     }
 
     public void PopulateRankingList()
-    {       
+    {
         GameObject entryTemplate = transform.GetChild(0).gameObject;
         GameObject g;
         // if result was loaded correctly
         if (result != null)
         {
             errorPopUp.SetActive(false);
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < result.Count; i++)
             {
                 if (result[i].userID == userID)
                 {

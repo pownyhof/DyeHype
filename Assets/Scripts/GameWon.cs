@@ -49,7 +49,7 @@ public class GameWon : MonoBehaviour
         if (currentLevel == levelReached)
         {
             levelReached += 1;
-            PlayerPrefs.SetInt("levelReached", (levelReached));
+            PlayerPrefs.SetInt("levelReached", levelReached);
             int score = calculateScore();
             PlayfabManager.Instance.SendLeaderboard(score);
         }
@@ -71,12 +71,34 @@ public class GameWon : MonoBehaviour
 
     private int calculateScore()
     {
-        int total = 100;
+        int levelScore = 0;
+        int total = 0;
         int livesRemainingScore = 0;
         int jokerScore = 0;
 
         livesRemaining = Lives.GetRemainingLives();
+        int levelReached = PlayerPrefs.GetInt("levelReached");
         int jokerUsed = PlayerPrefs.GetInt("jokerUsed");
+        if(levelReached > 0)
+        {
+            levelScore += 100;
+            if(levelReached > 9)
+            {
+                levelScore += 50;
+                if(levelReached > 19)
+                {
+                    levelScore += 50;
+                    if (levelReached > 29)
+                    {
+                        levelScore += 50;
+                        if (levelReached > 39)
+                        {
+                            levelScore += 50;                         
+                        }
+                    }
+                }
+            }
+        }
         if(livesRemaining == 3)
         {
             livesRemainingScore = 60;
@@ -97,17 +119,18 @@ public class GameWon : MonoBehaviour
             jokerScore = 40;
             total += 40;
         }
-        showScore(100,livesRemainingScore,jokerScore,total);
+        total += levelScore;
+        showScore(levelScore,livesRemainingScore,jokerScore,total);
         return total;
     }
 
     private void showScore(int levelCompletedScore, int livesRemainingScore, int jokerScore, int total)
     {
-        levelCompletedScoreText.text = levelCompletedScore.ToString();
-        livesRemainingScoreText.text = livesRemainingScore.ToString();
-        jokerUsedScoreText.text = jokerScore.ToString();
-        totalScoreText.text = total.ToString();
-}
+        levelCompletedScoreText.text = "+" + levelCompletedScore.ToString() + " p";
+        livesRemainingScoreText.text = "+" + livesRemainingScore.ToString() + " p";
+        jokerUsedScoreText.text = "+" + jokerScore.ToString() + " p";
+        totalScoreText.text = "+" + total.ToString() + " p";
+    }
 
     private void SetLanguage()
     {

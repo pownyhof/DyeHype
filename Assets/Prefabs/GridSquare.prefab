@@ -379,7 +379,7 @@ MonoBehaviour:
   red4: {fileID: 21300000, guid: 8184cb72a34c0ce45a7439cb519d6761, type: 3}
   red5: {fileID: 21300000, guid: b450060c342128f4c81861f481f7c6f4, type: 3}
   defaultSquare: {fileID: 21300000, guid: 659213b31fb041445a02faa8c6364367, type: 3}
-  logo: {fileID: 21300000, guid: 659213b31fb041445a02faa8c6364367, type: 3}
+  logo: {fileID: 21300000, guid: a5da6f0338462e340af6c8053322ddd1, type: 3}
 --- !u!82 &5475201030597696061
 AudioSource:
   m_ObjectHideFlags: 0
