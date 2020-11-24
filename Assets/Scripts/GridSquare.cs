@@ -218,10 +218,11 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     private void OnJokerUsed()
     {
         // joker sets correct color once for the player
-        if (selected_)
+        if (selected_ && SquareDefaultValue == false)
         {
             OnSetNumber(correctColor);
             PlayerPrefs.SetInt("jokerUsed", 1);
+            GameEvents.OnSetJokerTextMethod();
         }
     }
 

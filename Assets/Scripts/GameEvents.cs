@@ -78,6 +78,15 @@ public class GameEvents : MonoBehaviour
             OnJokerUsed();
     }
 
+    public delegate void SetJokerText();
+    public static event SetJokerText OnSetJokerText;
+
+    public static void OnSetJokerTextMethod()
+    {
+        if (OnSetJokerText != null)
+            OnSetJokerText();
+    }
+
     public delegate void CheckBoxCompleted(int square_index);
     public static event CheckBoxCompleted OnCheckBoxCompleted;
 

@@ -9,7 +9,6 @@ public class MenuButtons : MonoBehaviour
     public Sprite audioOn;
     public Sprite audioOff;
     public Button audioButton;
-    public Button jokerButton;
 
     public GameObject optionsPopUp;
     public GameObject rankingPopUp;
@@ -103,7 +102,6 @@ public class MenuButtons : MonoBehaviour
         // just use Joker if player didnt use one already in current level
         if (jokerUsed == 0)
         {
-            jokerButton.GetComponentInChildren<Text>().text = "0";
             GameEvents.OnJokerUsedMethod();
         }
     }

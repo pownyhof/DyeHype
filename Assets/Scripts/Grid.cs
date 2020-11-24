@@ -132,6 +132,7 @@ public class Grid : MonoBehaviour
         // subscribe to events
         GameEvents.OnCheckGameCompleted += CheckGameCompleted;
         GameEvents.OnCheckBoxCompleted += OnCheckBoxCompleted;
+        GameEvents.OnSetJokerText += OnSetJokerText;
     }
 
     private void OnDisable()
@@ -139,6 +140,7 @@ public class Grid : MonoBehaviour
         // unsubscribe to events
         GameEvents.OnCheckGameCompleted -= CheckGameCompleted;
         GameEvents.OnCheckBoxCompleted -= OnCheckBoxCompleted;
+        GameEvents.OnSetJokerText -= OnSetJokerText;
         //----------------------------------------------------
         // save data to gameData.ini when player leaves game and has level not yet completed
         var clues_data = GameData.Instance.dyehype_game[selectedLevel].clues_data;
@@ -330,6 +332,11 @@ public class Grid : MonoBehaviour
     private void showJokerButton()
     {
         jokerPopUp.SetActive(true);
+    }
+
+    public void OnSetJokerText()
+    {
+        jokerButton.GetComponentInChildren<Text>().text = "0";
     }
 
     private void CheckGameCompleted()
