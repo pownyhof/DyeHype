@@ -50,6 +50,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public Sprite defaultSquare;
     public Sprite logo;
 
+   
     void Start()
     {
         // no square selected at the start of the game

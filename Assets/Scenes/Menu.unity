@@ -2254,6 +2254,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 752449779}
   m_CullTransparentMesh: 0
+--- !u!1 &769674541
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 769674543}
+  - component: {fileID: 769674542}
+  m_Layer: 0
+  m_Name: Advertisment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &769674542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769674541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0c98f4a172c29448a9f6112446ba1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AppID: ca-app-pub-6848390432170000~6771327290
+  BannerAdID: ca-app-pub-6848390432170000/7088049733
+  InterstitialAdID: ca-app-pub-6848390432170000/7509693892
+  BanePosition: 1
+  TestDevice: 0
+--- !u!4 &769674543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769674541}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &793320261
 GameObject:
   m_ObjectHideFlags: 0
@@ -4234,7 +4282,6 @@ MonoBehaviour:
   audioOn: {fileID: 0}
   audioOff: {fileID: 0}
   audioButton: {fileID: 0}
-  jokerButton: {fileID: 0}
   optionsPopUp: {fileID: 1558379085}
   rankingPopUp: {fileID: 1348030514}
 --- !u!224 &1395463796

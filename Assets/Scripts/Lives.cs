@@ -49,6 +49,7 @@ public class Lives : MonoBehaviour
         {
             GameEvents.OnGameOverMethod();
             gameOverPopUp.SetActive(true);
+            AdManager.Instance.ShowBanner();
         }
     }
 

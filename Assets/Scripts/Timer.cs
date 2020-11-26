@@ -86,4 +86,9 @@ public class Timer : MonoBehaviour
     {
         return instance.delta_time.ToString();
     }
+
+    public void StartClock()
+    {
+        stopTimer = false;
+    }
 }

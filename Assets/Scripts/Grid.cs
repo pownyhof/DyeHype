@@ -88,6 +88,10 @@ public class Grid : MonoBehaviour
             var data = GameData.Instance.dyehype_game[selectedLevel];
             SetGridNumbers(data);
         }
+
+        AdManager.Instance.HideBanner();
+        AdManager.Instance.ShowInterstitialAd();
+
     }
 
     private void checkPlayPrefs()
@@ -164,6 +168,8 @@ public class Grid : MonoBehaviour
         {
             Config.DeleteFile();
         }
+
+        AdManager.Instance.HideBanner();
     }
 
     private void CreateGrid()
@@ -353,6 +359,7 @@ public class Grid : MonoBehaviour
         }
         // gets called when player has entered all squares correctly
         GameEvents.OnGameCompletedMethod();
+        AdManager.Instance.ShowBanner();
     }
 
     // checks every time after player enters a square if the entered square completes a 2x2 Box so a different sound can be played

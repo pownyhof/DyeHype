@@ -106,6 +106,11 @@ public class MenuButtons : MonoBehaviour
         }
     }
 
+    public void playAd()
+    {
+        AdManager.Instance.ShowInterstitialAd();
+    }
+
     // method when player presses "new try" button in GameScene
     public void restartGame()
     {
