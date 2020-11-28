@@ -11,6 +11,7 @@ public class LevelSelector : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.SetInt("levelReached", 39);
         // change this variable to activate more puzzles for testing
         int levelReached = PlayerPrefs.GetInt("levelReached", 0);
 

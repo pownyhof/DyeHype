@@ -67,6 +67,21 @@ public class GameWon : MonoBehaviour
         }
         // show GameObject winPopUp
         WinPopup.SetActive(true);
+
+        // logging
+        int mistakes = 3 - livesRemaining;
+        int jokerUsed = PlayerPrefs.GetInt("jokerUsed");
+        string joker = "";
+        if(jokerUsed == 0)
+        {
+            joker = "No";
+        }
+        else
+        {
+            joker = "Yes";
+        }
+        int level = currentLevel + 1;
+        LogOutputHandler.Instance.HandleLevelCompletedLog("LEVEL_COMPLETED", PlayfabManager.Instance.GetUserID(), level.ToString(), Timer.GetCurrentTime(), mistakes.ToString(), joker);
     }
 
     private int calculateScore()

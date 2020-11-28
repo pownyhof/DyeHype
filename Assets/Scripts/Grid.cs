@@ -89,9 +89,10 @@ public class Grid : MonoBehaviour
             SetGridNumbers(data);
         }
 
+        LogOutputHandler.Instance.HandleGameStartedLog("GAME_STARTED", PlayfabManager.Instance.GetUserID(), selectedLevel.ToString());
+
         AdManager.Instance.HideBanner();
         AdManager.Instance.ShowInterstitialAd();
-
     }
 
     private void checkPlayPrefs()

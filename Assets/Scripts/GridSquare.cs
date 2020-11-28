@@ -189,6 +189,36 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 this.colors = colors;
 
                 GameEvents.OnWrongColorMethod();
+
+                #region logging
+                string eventType = "CLICK";
+                string enteredColor = "";
+                string playerId = PlayfabManager.Instance.GetUserID();
+                int levelNumber = PlayerPrefs.GetInt("selectedLevel") + 1;
+                string level = levelNumber.ToString();
+                string field = square_index_.ToString();
+                string correct = "No";
+                string clickTime = Timer.GetCurrentTime();
+
+                if (number_ == 1)
+                {
+                    enteredColor = "blue";
+                }
+                if (number_ == 2)
+                {
+                    enteredColor = "green";
+                }
+                if (number_ == 3)
+                {
+                    enteredColor = "yellow";
+                }
+                if (number_ == 4)
+                {
+                    enteredColor = "red";
+                }
+
+                LogOutputHandler.Instance.HandleClickLog(eventType, playerId, level, field, enteredColor, correct, clickTime);
+                #endregion
             }
             else
             {
@@ -209,6 +239,36 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 var colors = this.colors;
                 colors.normalColor = Color.white;
                 this.colors = colors;
+
+                #region logging2
+                string eventType = "CLICK";
+                string enteredColor = "";
+                string playerId = PlayfabManager.Instance.GetUserID();
+                int levelNumber = PlayerPrefs.GetInt("selectedLevel") + 1;
+                string level = levelNumber.ToString();
+                string field = square_index_.ToString();
+                string correct = "Yes";
+                string clickTime = Timer.GetCurrentTime();
+
+                if (number_ == 1)
+                {
+                    enteredColor = "blue";
+                }
+                if (number_ == 2)
+                {
+                    enteredColor = "green";
+                }
+                if (number_ == 3)
+                {
+                    enteredColor = "yellow";
+                }
+                if (number_ == 4)
+                {
+                    enteredColor = "red";
+                }
+
+                LogOutputHandler.Instance.HandleClickLog(eventType, playerId, level, field, enteredColor, correct, clickTime);
+                #endregion
             }
 
             // check after every entered square if player solved the entire level
@@ -224,7 +284,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
             OnSetNumber(correctColor);
             PlayerPrefs.SetInt("jokerUsed", 1);
             GameEvents.OnSetJokerTextMethod();
-        }
+        }      
     }
 
     public void OnSquareSelected(int square_index)
@@ -278,3 +338,4 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         return number_ == correctColor;
     }
 }
+
