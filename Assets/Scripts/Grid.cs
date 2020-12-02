@@ -89,10 +89,20 @@ public class Grid : MonoBehaviour
             SetGridNumbers(data);
         }
 
-        LogOutputHandler.Instance.HandleGameStartedLog("GAME_STARTED", PlayfabManager.Instance.GetUserID(), selectedLevel.ToString());
+        // logging
+        int level = selectedLevel + 1;
+        int levelTry = PlayerPrefs.GetInt("levelTry", 1);
+        string playerId = PlayfabManager.Instance.GetUserID();
+        string gameId = playerId + "_" + level.ToString() + "_" + levelTry.ToString();
+        LogOutputHandler.Instance.HandleGameStartedLog("GAME_STARTED", playerId, level.ToString(), gameId);
 
+        // adMob
         AdManager.Instance.HideBanner();
-        AdManager.Instance.ShowInterstitialAd();
+        // dont show interstitial ad on first level
+        if (level > 1)
+        {
+            AdManager.Instance.ShowInterstitialAd();
+        }
     }
 
     private void checkPlayPrefs()
@@ -170,6 +180,7 @@ public class Grid : MonoBehaviour
             Config.DeleteFile();
         }
 
+        // adMob
         AdManager.Instance.HideBanner();
     }
 
@@ -359,8 +370,7 @@ public class Grid : MonoBehaviour
             }
         }
         // gets called when player has entered all squares correctly
-        GameEvents.OnGameCompletedMethod();
-        AdManager.Instance.ShowBanner();
+        GameEvents.OnGameCompletedMethod();       
     }
 
     // checks every time after player enters a square if the entered square completes a 2x2 Box so a different sound can be played

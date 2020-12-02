@@ -4,8 +4,6 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
 public class Language : MonoBehaviour
 {
     //-strings for rules, jokerClue and gameWonPopUp------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -28,18 +26,18 @@ public class Language : MonoBehaviour
     private string rules7_G = "Von den 4 diagonal anliegenden Feldern müssen GENAU 3 gelb sein, weil dass Feld in der mitte mit '3Y' (3 yellow - 3 gelb) markiert ist.";
     private string rules8_G = "Nach demselben Prinzip kann ein Feld mit 'EC' (Each color - jede Farbe) markiert sein. Somit müssen die 4 diagonal anliegenden Felder jede Farbe (gelb, grün, rot und blau) genau einmal annehmen.";
 
-    private string rules1_S = "";
-    private string rules2_S = "";
-    private string rules3_S = "";
-    private string rules4_S = "";
-    private string rules5_S = "";
-    private string rules6_S = "";
-    private string rules7_S = "";
-    private string rules8_S = "";
+    private string rules1_S = "Todo el campo de juego debe llenarse con los colores rojo, azul, verde y amarillo.Cada color debe aparecer exactamente una vez en cada cuadro de 2x2.Además, los campos del mismo color no deben tocarse ni vertical ni horizontalmente.Ejemplo con un campo rojo:";
+    private string rules2_S = "Además, las notas en el borde del campo indican la frecuencia con la que aparecen campos de cierto color en una columna o fila. Ejemplo:";
+    private string rules3_S = "Exactamente 2 campos azules en esta fila";
+    private string rules4_S = "¡Nuevas pistas! Si los campos están marcados con 'NB' (No blue - sin azul), 'NG' (No green - sin verde), 'NY' (No yellow, sin amarillo) o 'NR' (No red, sin rojo) están permitidos los campos adyacentes(¡ni siquiera en diagonal!) son tocados por campos con el color indicado. Ejemplo 'NB':";
+    private string rules5_S = "Ningún campo marcado con una X roja puede ser azul, ya que el campo en el medio está marcado con 'NB', es decir, 'No blue'.";
+    private string rules6_S = "¡Nuevas pistas! Hay campos marcados con números y colores, por ejemplo '1R' (1 red - 1 rojo) o '2G' (2 green - 2 verdes) y así sucesivamente.Por ejemplo: '3B' significa que exactamente 3 de los 4 campos adyacentes en diagonal deben ser azules. Otro ejemplo:";
+    private string rules7_S = "Exactamente 3 de los 4 campos adyacentes en diagonal deben ser amarillos, porque el campo en el medio está marcado con '3Y' (3 yellow - 3 amarillos).";
+    private string rules8_S = "Utilizando el mismo principio, un campo se puede marcar con 'EC' (each color - cada color). Por lo tanto, los 4 campos adyacentes en diagonal deben tomar cada color(amarillo, verde, rojo y azul)exactamente una vez";
 
     private string joker_E = "You have one joker per game! Select one square and the joker will fill it out for you with the correct color! Have Fun!";
     private string joker_G = "Du hast einen Joker pro Spiel! Wähle ein Feld und der Joker füllt es für dich mit der richtigen Farbe aus! Viel Spaß!";
-    private string joker_S = "";
+    private string joker_S = "¡Tienes un comodín por juego! ¡Elija un campo y el comodín lo completará con el color adecuado para usted! ¡Que te diviertas!";
 
     private string gameWon1_E = "Your time:";
     private string gameWon2_E = "Level completed:";
@@ -61,6 +59,7 @@ public class Language : MonoBehaviour
     private string gameWon4_S = "Joker usado:";
     private string gameWon5_S = "Joker no usado:";
     private string gameWon6_S = "Puntaje total:";
+
 
     //-strings for rules, jokerClue and gameWonPopUp------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -132,6 +131,7 @@ public class Language : MonoBehaviour
         }
     }
 
+    // ------ Getter methods
     public string[] GetRules(int rules)
     {
         if (rules == 0)

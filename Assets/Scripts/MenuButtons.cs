@@ -72,8 +72,13 @@ public class MenuButtons : MonoBehaviour
         GameSettings.Instance.SetContinuePreviousGame(false);
         // current level gets always saved in player prefs
         int nextLevel = PlayerPrefs.GetInt("selectedLevel") + 1;
-        PlayerPrefs.SetInt("selectedLevel", nextLevel);
-        SceneManager.LoadScene("GameScene");
+        // so user can't load level that does not exist, currently 60 levels in game
+        int maxLevel = 60;
+        if (nextLevel < maxLevel)
+        {
+            PlayerPrefs.SetInt("selectedLevel", nextLevel);
+            SceneManager.LoadScene("GameScene");
+        }
     }
 
     public void SetPause(bool paused)
@@ -106,9 +111,18 @@ public class MenuButtons : MonoBehaviour
         }
     }
 
+    // adMob
     public void playAd()
     {
         AdManager.Instance.ShowInterstitialAd();
+    }
+
+    // logging
+    public void logRating(int rating)
+    {
+        int level = PlayerPrefs.GetInt("selectedLevel") + 1;
+        string playerId = PlayfabManager.Instance.GetUserID();
+        LogOutputHandler.Instance.HandleRatingLog("RATING", playerId, level.ToString(), rating.ToString());
     }
 
     // method when player presses "new try" button in GameScene

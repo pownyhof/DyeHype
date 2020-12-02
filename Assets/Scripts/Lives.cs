@@ -52,9 +52,6 @@ public class Lives : MonoBehaviour
             gameOverPopUp.SetActive(true);
             // show ad at the bottom
             AdManager.Instance.ShowBanner();
-            // logging
-            int level = PlayerPrefs.GetInt("selectedLevel") + 1;
-            LogOutputHandler.Instance.HandleGameOverLog("GAME_OVER", PlayfabManager.Instance.GetUserID(), level.ToString(), Timer.GetCurrentTime());
         }
     }
 

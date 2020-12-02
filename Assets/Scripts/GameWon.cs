@@ -68,7 +68,14 @@ public class GameWon : MonoBehaviour
         // show GameObject winPopUp
         WinPopup.SetActive(true);
 
+        // adBanner
+        AdManager.Instance.ShowBanner();
+
         // logging
+        int level = currentLevel + 1;
+        int levelTry = PlayerPrefs.GetInt("levelTry");
+        string playerId = PlayfabManager.Instance.GetUserID();
+        string gameId = playerId + "_" + level.ToString() + "_" + levelTry.ToString();
         int mistakes = 3 - livesRemaining;
         int jokerUsed = PlayerPrefs.GetInt("jokerUsed");
         string joker = "";
@@ -80,8 +87,8 @@ public class GameWon : MonoBehaviour
         {
             joker = "Yes";
         }
-        int level = currentLevel + 1;
-        LogOutputHandler.Instance.HandleLevelCompletedLog("LEVEL_COMPLETED", PlayfabManager.Instance.GetUserID(), level.ToString(), Timer.GetCurrentTime(), mistakes.ToString(), joker);
+        LogOutputHandler.Instance.HandleLevelCompletedLog("LEVEL_COMPLETED", playerId, level.ToString(), gameId, Timer.instance.GetCurrentTimeForLogging(), mistakes.ToString(), joker);
+        PlayerPrefs.SetInt("levelTry", 1);
     }
 
     private int calculateScore()
@@ -108,7 +115,11 @@ public class GameWon : MonoBehaviour
                         levelScore += 50;
                         if (levelReached > 39)
                         {
-                            levelScore += 50;                         
+                            levelScore += 50;
+                            if (levelReached > 49)
+                            {
+                                levelScore += 50;
+                            }
                         }
                     }
                 }

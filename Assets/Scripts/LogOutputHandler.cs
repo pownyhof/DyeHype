@@ -16,7 +16,7 @@ public class LogOutputHandler : MonoBehaviour
     }
 
     //send logs to Loggly
-    public void HandleClickLog(string eventType, string playerId, string level, string field, string enteredColor, string correct, string clickTime)
+    public void HandleClickLog(string eventType, string playerId, string level, string field, string enteredColor, string correct, string gameId, string clickTime)
     {
         //Initialize WWWForm
         var loggingForm = new WWWForm();
@@ -28,12 +28,13 @@ public class LogOutputHandler : MonoBehaviour
         loggingForm.AddField("Square_Index", field);
         loggingForm.AddField("Color", enteredColor);
         loggingForm.AddField("Correct", correct);
-        loggingForm.AddField("Click_Time", clickTime);
+        loggingForm.AddField("Game_Id", gameId);
+        loggingForm.AddField("Click_Time_In_Sec", clickTime);
 
         StartCoroutine(SendData(loggingForm));
     }
 
-    public void HandleLevelCompletedLog(string eventType, string playerId, string level, string requiredTime, string mistakes, string joker)
+    public void HandleLevelCompletedLog(string eventType, string playerId, string level, string gameId, string requiredTime, string mistakes, string joker)
     {
         //Initialize WWWForm
         var loggingForm = new WWWForm();
@@ -42,14 +43,15 @@ public class LogOutputHandler : MonoBehaviour
         loggingForm.AddField("Event_Type", eventType);
         loggingForm.AddField("Player_Id", playerId);
         loggingForm.AddField("Level", level);
-        loggingForm.AddField("Required_Time", requiredTime);
+        loggingForm.AddField("Game_Id", gameId);
+        loggingForm.AddField("Required_Time_In_Sec", requiredTime);
         loggingForm.AddField("Mistakes", mistakes);
         loggingForm.AddField("Joker_Used", joker);
 
         StartCoroutine(SendData(loggingForm));
     }
 
-    public void HandleGameOverLog(string eventType, string playerId, string level, string requiredTime)
+    public void HandleGameOverLog(string eventType, string playerId, string level, string gameId, string requiredTime)
     {
         //Initialize WWWForm
         var loggingForm = new WWWForm();
@@ -58,12 +60,13 @@ public class LogOutputHandler : MonoBehaviour
         loggingForm.AddField("Event_Type", eventType);
         loggingForm.AddField("Player_Id", playerId);
         loggingForm.AddField("Level", level);
-        loggingForm.AddField("Required_Time", requiredTime);
+        loggingForm.AddField("Game_Id", gameId);
+        loggingForm.AddField("Required_Time_In_Sec", requiredTime);
 
         StartCoroutine(SendData(loggingForm));
     }
 
-    public void HandleGameStartedLog(string eventType, string playerId, string level)
+    public void HandleGameStartedLog(string eventType, string playerId, string level, string gameId)
     {
         //Initialize WWWForm
         var loggingForm = new WWWForm();
@@ -72,6 +75,21 @@ public class LogOutputHandler : MonoBehaviour
         loggingForm.AddField("Event_Type", eventType);
         loggingForm.AddField("Player_Id", playerId);
         loggingForm.AddField("Level", level);
+        loggingForm.AddField("Game_Id", gameId);
+
+        StartCoroutine(SendData(loggingForm));
+    }
+
+    public void HandleRatingLog(string eventType, string playerId, string level, string rating)
+    {
+        //Initialize WWWForm
+        var loggingForm = new WWWForm();
+
+        //Add log message to WWWForm
+        loggingForm.AddField("Event_Type", eventType);
+        loggingForm.AddField("Player_Id", playerId);
+        loggingForm.AddField("Level", level);
+        loggingForm.AddField("Rating", rating);
 
         StartCoroutine(SendData(loggingForm));
     }

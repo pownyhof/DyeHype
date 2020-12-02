@@ -29,9 +29,8 @@ public class Ranking : MonoBehaviour
         GameObject entryTemplate = transform.GetChild(0).gameObject;
         GameObject g;
         // if result was loaded correctly
-        if (result != null)
+        if (result.Count != 0)
         {
-            errorPopUp.SetActive(false);
             for (int i = 0; i < result.Count; i++)
             {
                 if (result[i].userID == userID)
@@ -58,7 +57,8 @@ public class Ranking : MonoBehaviour
                     g.transform.GetChild(2).GetComponent<Text>().text = result[i].score;
                 }
             }
-            Destroy(entryTemplate);
+            errorPopUp.SetActive(false);
+            Destroy(entryTemplate);          
         }
         // if no result list exist, for example user had no internet connection
         else

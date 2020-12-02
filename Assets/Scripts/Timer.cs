@@ -82,6 +82,22 @@ public class Timer : MonoBehaviour
         return timerText;
     }
 
+    // for logging
+    public string GetCurrentTimeForLogging()
+    {
+        TimeSpan span = TimeSpan.FromSeconds(delta_time);
+
+        /*string hour = LeadingZero(span.Hours);
+        string min = LeadingZero(span.Minutes);
+        string sec = LeadingZero(span.Seconds);
+
+        return hour + "." + min + "." + sec;*/
+
+        // cast to int because no need to report ms
+        int time = (int)span.TotalSeconds;
+        return time.ToString();
+    }
+
     public static string GetCurrentTime()
     {
         return instance.delta_time.ToString();

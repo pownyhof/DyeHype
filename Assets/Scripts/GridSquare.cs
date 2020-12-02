@@ -193,12 +193,14 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 #region logging
                 string eventType = "CLICK";
                 string enteredColor = "";
-                string playerId = PlayfabManager.Instance.GetUserID();
+                string playerId = PlayfabManager.Instance.GetUserID();             
                 int levelNumber = PlayerPrefs.GetInt("selectedLevel") + 1;
+                int levelTry = PlayerPrefs.GetInt("levelTry", 1);
                 string level = levelNumber.ToString();
                 string field = square_index_.ToString();
                 string correct = "No";
-                string clickTime = Timer.GetCurrentTime();
+                string clickTime = Timer.instance.GetCurrentTimeForLogging();
+                string gameId = playerId + "_" + level + "_" + levelTry.ToString(); 
 
                 if (number_ == 1)
                 {
@@ -217,7 +219,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                     enteredColor = "red";
                 }
 
-                LogOutputHandler.Instance.HandleClickLog(eventType, playerId, level, field, enteredColor, correct, clickTime);
+                LogOutputHandler.Instance.HandleClickLog(eventType, playerId, level, field, enteredColor, correct, gameId, clickTime);
                 #endregion
             }
             else
@@ -245,10 +247,12 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 string enteredColor = "";
                 string playerId = PlayfabManager.Instance.GetUserID();
                 int levelNumber = PlayerPrefs.GetInt("selectedLevel") + 1;
+                int levelTry = PlayerPrefs.GetInt("levelTry", 1);
                 string level = levelNumber.ToString();
                 string field = square_index_.ToString();
                 string correct = "Yes";
-                string clickTime = Timer.GetCurrentTime();
+                string clickTime = Timer.instance.GetCurrentTimeForLogging();
+                string gameId = playerId + "_" + level + "_" + levelTry.ToString();
 
                 if (number_ == 1)
                 {
@@ -267,7 +271,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                     enteredColor = "red";
                 }
 
-                LogOutputHandler.Instance.HandleClickLog(eventType, playerId, level, field, enteredColor, correct, clickTime);
+                LogOutputHandler.Instance.HandleClickLog(eventType, playerId, level, field, enteredColor, correct, gameId, clickTime);
                 #endregion
             }
 
